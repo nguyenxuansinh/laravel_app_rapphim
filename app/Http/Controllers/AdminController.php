@@ -29,6 +29,15 @@ class AdminController extends Controller
            
         }
     }
+    public function logout(Request $request)
+    {
+        
+        
+        Auth::logout();
+        
+        return redirect()->route('admin.login');
+    }
+    
 
 ////////////////////////phim
     public function index()
@@ -62,16 +71,37 @@ class AdminController extends Controller
     {
         $startDate = $request->start_date;
         $endDate = $request->end_date;
+        
+       if( $startDate!=null && $endDate!=null && $startDate <=$endDate){
         $tongDoanhThu = Hoadon::whereBetween('ngaythanhtoan', [$startDate, $endDate])->sum('tongtien');
         $doanhThu = Hoadon::whereBetween('ngaythanhtoan', [$startDate, $endDate])->get();
+       }else{
+            $tongDoanhThu = Hoadon::sum('tongtien');
+         $doanhThu = Hoadon::all(); 
+       }
+       
+
         $doanhThuTheoThang = Hoadon::select(
             DB::raw('MONTH(ngaythanhtoan) as thang'),
             DB::raw('SUM(tongtien) as tongDoanhThu')
         )
         ->groupBy(DB::raw('MONTH(ngaythanhtoan)'))
         ->get();
-        
-        return view("home_admin.index",['hoadons'=>$doanhThu,'doanhThuTheoThang'=>$doanhThuTheoThang ,'tongDoanhThu' => $tongDoanhThu]);
+        $doanhthutheonam = Hoadon::select(
+            DB::raw('YEAR(ngaythanhtoan) as nam'),
+            DB::raw('SUM(tongtien) as tongDoanhThu')
+        )
+        ->groupBy(DB::raw('YEAR(ngaythanhtoan)'))
+        ->get();
+        $results = DB::table('hoadon AS hd')
+        ->join('chongoi AS cg', 'hd.id', '=', 'cg.id_thanhtoan')
+        ->join('suatchieu AS sc', 'cg.id_suatchieu', '=', 'sc.id')
+        ->join('phim AS m', 'sc.id_phim', '=', 'm.id')
+        ->select('m.tenphim', DB::raw('sc.giave * count(cg.id) as tong_doanh_thu'))
+        ->where('m.trangthai', 'đang chiếu')
+        ->groupBy('m.tenphim', 'sc.giave')
+        ->get();
+        return view("home_admin.index",['hoadons'=>$doanhThu,'doanhThuTheoThang'=>$doanhThuTheoThang ,'tongDoanhThu' => $tongDoanhThu,'doanhThuTheoNam'=>$doanhthutheonam,'results'=>$results]);
     }
     
 

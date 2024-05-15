@@ -130,6 +130,7 @@ Route::group(['middleware' => 'checklogin_admin'], function () {
    Route::get('feedback/edit/{id}', [FeedbackController::class, 'edit'])->name('feedback.edit');
    Route::post('feedback/update/{id}', [FeedbackController::class, 'update'])->name('feedback.update');
    Route::get('feedback/delete_all', [FeedbackController::class, 'delete_all'])->name('feedback.delete_all');
+  
+   Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-   
 });
