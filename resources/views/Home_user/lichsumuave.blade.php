@@ -80,7 +80,10 @@
     float: right;
     font-size: 28px;
     font-weight: bold;
-    
+    border-radius: 50%;
+ 
+    border: none;
+    padding: 0 13px;
 }
 
 .close:hover,
@@ -112,6 +115,9 @@
         }
         .w_100{
             width: 100%;
+        }
+        .modal1-content{
+            width: 80%;
         }
     }
 </style>
@@ -282,7 +288,7 @@ menuItems.forEach(item => {
                 
 
                 var chuoi = '<div class="modal1-content" style="background-color: #3366CC; border-radius: 10px; padding-left: 20px">'+
-                                        '<button  style="padding: 5px" type="button" class="close" >&times;</button>'+                               
+                                        '<button   type="button" class="close" >&times;</button>'+                               
                                                 tenphim+             
                                             
                                            '<div style=" font-size: 20px; font-weight: bold" class = "text-white">StarCinema</div>'+
