@@ -60,7 +60,7 @@ class SuatchieuController extends Controller
         ->exists();
 
         if ($giaoNhau) {
-            return redirect()->back()->withInput()->with('error', 'Thời gian chiếu hoặc kết thúc trùng lặp với suất chiếu khác.');
+            return redirect()->back()->withInput()->with('error', 'Thời gian chiếu và kết thúc giao nhau hoặc trùng với thời gian chiếu khác cùng một phòng chiếu này!');
         }
     }
 

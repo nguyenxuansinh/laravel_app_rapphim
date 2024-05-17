@@ -255,6 +255,13 @@ class UserController extends Controller
 
 
     public function datve_index(Request $request){
+        $chongio_ = 'chongio_' . Auth::user()->id;
+
+       
+            
+        
+        $ds_ghe_ = 'ds_ghe_' . Auth::user()->id;
+        
         
         $expires_at_ = 'expires_at_' . Auth::user()->id;
         if (Session::has($expires_at_)) {
@@ -276,14 +283,24 @@ class UserController extends Controller
         if (Session::has($id_ghe_dat_)) {
             Session::forget($id_ghe_dat_);
         }
-        $ds_ghe_ = 'ds_ghe_' . Auth::user()->id;
-        if (Session::has($ds_ghe_)) {
-            Session::forget($ds_ghe_);
-        }
-        $chongio_ = 'chongio_' . Auth::user()->id;
+
         if (Session::has($chongio_)) {
+            foreach (session($chongio_) as $row){
+                $id_suatchieu = $row['id'];
+            }
             Session::forget($chongio_);
         }
+      
+        if (Session::has($ds_ghe_)) {
+            foreach (session($ds_ghe_) as $row){
+                Luutam::where('id_ghe', $row['id'])
+                        ->where('id_suatchieu', $id_suatchieu)
+                        ->delete();
+            }
+            Session::forget($ds_ghe_);
+        }
+       
+        
         $phongchieu_ = 'phongchieu_' . Auth::user()->id;
          if (Session::has($phongchieu_)) {
             Session::forget($phongchieu_);
@@ -355,12 +372,26 @@ class UserController extends Controller
             Session::forget($id_ghe_dat_);
         }
         $ds_ghe_ = 'ds_ghe_' . Auth::user()->id;
-        if (Session::has($ds_ghe_)) {
-            Session::forget($ds_ghe_);
-        }
+       
         $chongio_ = 'chongio_' . Auth::user()->id;
+        if(Session::has($chongio_) && Session::has($ds_ghe_)){
+            foreach (session($chongio_) as $row){
+                $id_suatchieu = $row['id'];
+            }
+            foreach (session($ds_ghe_) as $row){
+                Luutam::where('id_ghe', $row['id'])
+                        ->where('id_suatchieu', $id_suatchieu)
+                        ->delete();
+            }
+        }
         if (Session::has($chongio_)) {
+           
             Session::forget($chongio_);
+        }
+      
+        if (Session::has($ds_ghe_)) {
+           
+            Session::forget($ds_ghe_);
         }
         $phongchieu_ = 'phongchieu_' . Auth::user()->id;
         if (Session::has($phongchieu_)) {
@@ -392,16 +423,16 @@ class UserController extends Controller
         $suatchieus_gio = Suatchieu::whereDate('thoigianchieu', $date)->where('id_phim',  $phim['id'])->get();
         
         session()->put($suatchieus_gio_, $suatchieus_gio);
+        return response()->json(['suatchieus_gio' => session($suatchieus_gio_)]);
         }
-        
        
-
-        return view("home_user.datve");
+        return response()->json(['message' => 'Không có ngày chiếu được cung cấp.']);
     }
     
 
-    public function datve_suatchieu($id_suatchieu){
-
+    public function datve_suatchieu(Request $request){
+        $id_suatchieu=$request->input('id_suatchieu');
+        
         $phongchieu_ = 'phongchieu_' . Auth::user()->id;
         $giave_ = 'giave_' . Auth::user()->id;
         $seatRows_ = 'seatRows_' . Auth::user()->id;
@@ -486,13 +517,14 @@ class UserController extends Controller
                 session()->put($giave_, $suatchieu->giave);
                 session()->put($seatRows_, $seatRows);
                 session()->put($id_ghe_dat_, $id_ghe_dat);
-
+                return response()->json(['seatRows' => session($seatRows_),'giave_' => session($giave_),'id_ghe_dat_'=>session($id_ghe_dat_),'ds_ghe_'=>session($ds_ghe_),'phongchieu_'=>session($phongchieu_),'chongio_'=>session($chongio_)]);
+               
                 
-                return view("home_user.datve");
         } else {
             // Nếu ID suất chiếu không tồn tại, xử lý theo ý định của bạn, ví dụ:
-            return redirect()->route('route.name')->with('error', 'ID suất chiếu không tồn tại.');
+            return response()->json(['message' => 'Không có suất chiếu được cung cấp.']);
         }
+       
     }
 
     public function luuGiaTriSoLuong(Request $request)

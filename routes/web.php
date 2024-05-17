@@ -38,32 +38,13 @@ Route::post('/doimatkhau', [UserController::class, 'doimatkhau'])->name('user.do
 
 
 
-Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
 
 
 
-Route::get('user/index', [UserController::class, 'index'])->name('user.index');
-Route::get('phimdangchieu/detail', [UserController::class, 'phimdangchieu_detail'])->name('phimdangchieu.detail');
-Route::get('phimsapchieu/detail', [UserController::class, 'phimsapchieu_detail'])->name('phimsapchieu.detail');
-Route::get('user/info', [UserController::class, 'user_info_view'])->name('user.info_view');
-Route::get('user/thanhvien', [UserController::class, 'thanhvien'])->name('user.thanhvien');
-
-
+Route::get('/', [UserController::class, 'index'])->name('user.index');
 Route::get('user/gioithieu', [UserController::class, 'user_gioithieu_view'])->name('user.gioithieu');
+Route::get('user/search', [UserController::class, 'search'])->name('user.search');
 
-Route::post('user/datve', [UserController::class, 'datve_index'])->name('datve.index');
-Route::post('user/kocosuatchieu', [UserController::class, 'kocosuatchieu'])->name('datve.kocosuatchieu');
-
-Route::post('user/datve/ngaychieu/{ngaychieu}', [UserController::class, 'datve_ngaychieu_giochieu'])->name('ngaychieu.giochieu');
-
-/*{id_suatchieu} */
-Route::post('user/datve/giochieu/{id_suatchieu}', [UserController::class, 'datve_suatchieu'])->name('datve.suatchieu');
-Route::post('user/datve/luu-gia-tri-so-luong', [UserController::class, 'luuGiaTriSoLuong'])->name('luu_gia_tri_so_luong');
-
-Route::post('user/datghe', [UserController::class, 'datghe_maghe'])->name('datghe.maghe');
-Route::post('/vnpay_payment', [UserController::class, 'vnpay_payment'])->name('vnpay_payment');
-Route::post('/momo_payment', [UserController::class, 'momo_payment'])->name('momo_payment');
-/*Route::get('/clear-session', [UserController::class, 'clearSession'])->name('clear-session');*/
 Route::group(['middleware' => 'checklogin'], function () {
    Route::get('/nangcaphang', [UserController::class, 'nangcaphang'])->name('nangcaphang');
    Route::post('user/update_pass', [UserController::class,'update'])->name('user.update_pass');
@@ -77,7 +58,29 @@ Route::group(['middleware' => 'checklogin'], function () {
 
    Route::get('user/lichsu', [UserController::class, 'lichsu'])->name('user.lichsu');
    Route::post('user/xemchitiet', [UserController::class, 'xemchitiet'])->name('user.xemchitiet');
-   Route::get('user/search', [UserController::class, 'search'])->name('user.search');
+   
+
+   Route::get('phimdangchieu/detail', [UserController::class, 'phimdangchieu_detail'])->name('phimdangchieu.detail');
+   Route::get('phimsapchieu/detail', [UserController::class, 'phimsapchieu_detail'])->name('phimsapchieu.detail');
+   Route::get('user/info', [UserController::class, 'user_info_view'])->name('user.info_view');
+   Route::get('user/thanhvien', [UserController::class, 'thanhvien'])->name('user.thanhvien');
+
+
+   
+   Route::post('user/datve', [UserController::class, 'datve_index'])->name('datve.index');
+   Route::post('user/kocosuatchieu', [UserController::class, 'kocosuatchieu'])->name('datve.kocosuatchieu');
+
+   Route::post('user/datve/ngaychieu/{ngaychieu}', [UserController::class, 'datve_ngaychieu_giochieu'])->name('ngaychieu.giochieu');
+
+
+   Route::post('user/datve/giochieu', [UserController::class, 'datve_suatchieu'])->name('datve.suatchieu');
+   Route::post('user/datve/luu-gia-tri-so-luong', [UserController::class, 'luuGiaTriSoLuong'])->name('luu_gia_tri_so_luong');
+
+   Route::post('user/datghe', [UserController::class, 'datghe_maghe'])->name('datghe.maghe');
+   Route::post('/vnpay_payment', [UserController::class, 'vnpay_payment'])->name('vnpay_payment');
+   Route::post('/momo_payment', [UserController::class, 'momo_payment'])->name('momo_payment');
+
+   Route::get('/user/logout', [UserController::class, 'logout'])->name('user.logout');
 });
 
 Route::get('admin/login', [AdminController::class, 'login'])->name('admin.login');

@@ -93,6 +93,8 @@
         border: 1px solid white; color: white; border-radius: 5px;
         
     }
+    .menu-giochieu:hover,
+    .menu-ngay:hover,
     .ngaychieu_active{
         border: 1px solid #f3ea28; color: #f3ea28;
         
@@ -251,6 +253,7 @@
             white-space: nowrap;
             height: 400px;
             width: 100%;
+            cursor: pointer;
 
         }
 
@@ -299,6 +302,20 @@
             height: 12rem;
             margin: 25% auto;
          }
+         .table_ghe::-webkit-scrollbar {
+            width: 10px; 
+            /* Độ rộng của thanh cuộn */
+            }
+            .table_ghe::-webkit-scrollbar-track {
+             background: rgba(255,255,255,0.3); /* Màu nền của thanh cuộn */
+            }
+            .table_ghe::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* Màu nền của phần cuộn */
+    border-radius: 4px; /* Độ cong của góc của phần cuộn */
+}
+.table_ghe::-webkit-scrollbar {
+    height: 10px; /* Độ cao của thanh cuộn */
+}
     }
 
     
@@ -357,12 +374,11 @@
 
     <div style="display: flex; align-items: center;justify-content: center; margin-top: 20px;">
         @foreach (session($suatchieus_ngay_) as $item)
-            
+        @if(now() > $item['ngay'])   
         <div style="margin-right: 20px" >
-            <form action="{{route('ngaychieu.giochieu',['ngaychieu'=>$item['ngay']])}}" method="post">
-                @csrf
+           
                 <?php
-
+                  
                 // Định dạng thời gian chiếu từ trường "thoigianchieu" của đối tượng $item
 
             
@@ -373,174 +389,64 @@
                 $dayOfWeek = \Carbon\Carbon::parse($item['ngay'])->isoFormat('dddd');
 
                 ?>
+                
+                <div style="border-color: rgba(255, 255, 255, 0.4); color: rgba(255,255,255,0.4)"  class="btn ngaychieu menu-ngay" >
+                    <div> 
+                        <div style="font-weight: bold; color: rgba(255,255,255,0.4)">{!! mb_convert_case($formattedDateTime, MB_CASE_TITLE, 'UTF-8') !!}</div>
+                        <div style="font-weight: bold;color: rgba(255,255,255,0.4)">{!! mb_convert_case($dayOfWeek, MB_CASE_TITLE, 'UTF-8') !!}</div>
+                    </div>
+                </div>
+            
+        </div>
+        @else
+        <div style="margin-right: 20px" >
+            <form class="ajax-form" data-ngay="{{ json_encode($item['ngay']) }}" action="{{route('ngaychieu.giochieu',['ngaychieu'=>$item['ngay']])}}" method="post">
+                @csrf
+                <?php
+                  
+                // Định dạng thời gian chiếu từ trường "thoigianchieu" của đối tượng $item
 
-                <button type="submit" class="btn ngaychieu menu-ngay" data-ngay="{{ $item['ngay'] }}" data-href="{{route('ngaychieu.giochieu',['ngaychieu'=>$item['ngay']])}}">
+            
+                $formattedDateTime = \Carbon\Carbon::parse($item['ngay'])->isoFormat('DD/MM ');
+
+                // Lấy thứ từ ngày đã định dạng
+
+                $dayOfWeek = \Carbon\Carbon::parse($item['ngay'])->isoFormat('dddd');
+
+                ?>
+                
+                <button type="submit" class="btn ngaychieu menu-ngay"  data-href="{{route('ngaychieu.giochieu',['ngaychieu'=>$item['ngay']])}}">
                     <div> 
                         <div style="font-weight: bold">{!!  mb_convert_case($formattedDateTime, MB_CASE_TITLE, 'UTF-8') !!}</div>
                         <div style="font-weight: bold">{!!  mb_convert_case( $dayOfWeek, MB_CASE_TITLE, 'UTF-8') !!}</div>
                     </div>
                     
                 </button>
+                
             </form>
         </div>
-           
+       
+        @endif  
         @endforeach
     </div>
 
 
-    @if(session()->has($suatchieus_gio_) && !empty(session($suatchieus_gio_)))
-    <p id="scrollTarget" style="margin: 40px 0; font-size: 20px;font-weight: bold;" class="text-center text-white">Chọn suất chiếu</p>
-    <div style="display: flex; align-items: center;justify-content: center; margin: 20px 0;">
-        @foreach (session($suatchieus_gio_) as $item)
+   
+    <div id = "suatchieu">
 
-            <div style="margin-right: 20px">
-                <form action="{{route('datve.suatchieu',['id_suatchieu' => $item->id])}}" method="POST">
-                    @csrf
-                    <?php
-                
-                   
-    
-                
-                    $gio = \Carbon\Carbon::parse($item->thoigianchieu)->format('H:i');
-    
-    
-                    ?>
-                    <!--type="submit" class="btn ngaychieu  menu-giochieu" data-href="//"{/{"//route('datve.suatchieu',['id_suatchieu' => $item->id])}}"-->
-                    <button   type="submit" class="btn ngaychieu menu-giochieu" data-id="{{ $item->id }}">
-                       
-                            {{ $gio }}
-                    </button>
-                </form>
-            </div>
-            
-        @endforeach
     </div>
-    @endif
+    
+    <div id = "soluong_ghe">
+
+    </div>
 
    
 
    
-    @if(session()->has($seatRows_) && count(session($seatRows_)) > 0)
-        <p style="margin:20px 0; font-size: 20px;font-weight: bold;" class="text-center text-white">Mua vé</p>
-        <div class="soluong" style="margin: auto; border: 1px solid #f3ea28;border-radius: 5px;">
-            <p style="margin:20px 0; font-size: 20px;font-weight: bold;" class="text-center text-white">Người lớn / <span style="color: #f3ea28">Đơn</span></p>
-            <p style="margin:20px 0; font-size: 20px;font-weight: bold;" class="text-center text-white">{{  number_format(session($giave_)) }}</p>
-            <div class="count">
-                <div class="count-btn count-minus">
-                    <i class="fas fa-minus icon"></i>
-                </div>
-                
-                <p class="count-number">{{ session($so_luong_,0) }}</p>
-                <div class="count-btn count-plus">
-                    <i class="fas fa-plus icon"></i>
-                </div>
-            </div>
-        </div>
-    
-    
-
-    <div  >
-        <div style="margin: 40px 0;">
-            <img style="width: 100%" src="{{ asset('assets/img/img-screen.png') }}" class="lazyload" alt=""> 
-            <div class = "manhinh">Màn hình</div>
-        </div>
-
-       
-            <div id="success-toast" style="display: none" class="alert alert-success" role="alert">
-               
-            </div>
-            
-               
-                    
-               
-            
-       
-        <div class="seat-table table_ghe">
-            <table>
-                @foreach (session($seatRows_) as $row => $seatsInRow)
-                <tr style="  margin-top: 20px; display: flex">
-                    <td style=" margin-right: 20px; align-items: center;display: flex;flex: 1;justify-content: center;">{{ $row }}</td>
-                    @foreach ($seatsInRow as $seat)
-                    <td style="align-items: center;display: flex;flex: 1;justify-content: center;">
-                        @if(in_array($seat['id'], session($id_ghe_dat_))) <!-- Kiểm tra xem ghế đã được đặt hay chưa -->
-                        
-                            <div  style="background-color: transparent; border: none; outline: none;  padding: 0; position: relative;">
-                                <img style="width: 100%" src="{{asset('assets1')}}/img/seat-single-disable.svg"  class="lazyload" alt="">
-                                <span style="left: 50%;
-                                top:100%;
-                                transform: translateX(-50%);
-                                z-index: 2;font-size: 0.9rem ; position: absolute;" class="text-white">{{ $seat['tenghe'] }}</span>
-                               
-                            </div>
-                        
-                        @else
-                        <form class="myForm"  action="{{route('datghe.maghe')}}" method="post">
-                            @csrf
-                            <input type="hidden" name="seat_id" value="{{ $seat['id'] }}">
-                            <div  class="danh-sach-ghe">
-                                @if(session()->has($ds_ghe_) && in_array($seat['id'], array_column(session($ds_ghe_), 'id')))
-                        
-                                <button style="background-color: transparent; border: none; outline: none;  padding: 0; position: relative;"  class="seat-button submitForm"  data-seat="{{ json_encode($seat) }}" >
-
-                                    <img style="width: 100%" src="{{ asset('assets1/img/seat-single-selecting.svg') }}" class="lazyload" alt="">
-                                    <span style="left: 50%;
-                                    top:100%;
-                                    transform: translateX(-50%);
-                                    z-index: 2;font-size: 0.9rem ; position: absolute;" class="text-white">{{ $seat['tenghe'] }}</span>
-                                </button>
-                            
-                        
-                                @else
-                                <button style="background-color: transparent; border: none; outline: none;  padding: 0; position: relative;"  class="seat-button submitForm"   data-seat="{{ json_encode($seat) }}"  >
-                                    <img style="width: 100%; " src="{{ asset('assets1/img/seat-single.svg') }}" class="lazyload" alt="">
-                                    <span style="left: 50%;
-                                    top:100%;
-                                    transform: translateX(-50%);
-                                    z-index: 2;font-size: 0.9rem ; position: absolute;" class="text-white">{{ $seat['tenghe'] }}</span>
-                                </button>
-                                @endif
-                            </div>
-                                
-                        
-            
-                            
-                        </form>
-                        @endif
-                    </td>
-                    @endforeach
-                </tr>
-                @endforeach
-            </table>
-
-        </div>
-      
-
-
-
-
-
-
-    </div>
-
-    <div style="display: flex; justify-content: center; margin-top: 40px;">
-        <div style="margin: 0 20px;display: flex;flex-direction: column;align-items: center;">
-            <img style="width: 3.2rem" src="{{asset('assets1')}}/img/seat-single-disable.svg"  class="lazyload" alt="">
-            <div class="text-white text-center">Ghế đã đặt</div>
-        </div>
-        <div style="margin: 0 20px;display: flex;flex-direction: column;align-items: center;">
-            <img style="width: 3.2rem; " src="{{ asset('assets1/img/seat-single.svg') }}" class="lazyload" alt="">
-            <div class="text-white text-center">Ghế trống</div>
-        </div>
-        <div style="margin: 0 20px;display: flex;flex-direction: column;align-items: center;">
-            <img style="width: 3.2rem" src="{{ asset('assets1/img/seat-single-selecting.svg') }}" class="lazyload" alt="">
-            <div class="text-white text-center">Ghế chọn</div>
-        </div>
-    </div>
-
-    @endif
+ 
    
 
-
+    
 
     
   
@@ -583,25 +489,15 @@
                     
                 </div>
                 <div style="display: flex;">
-                    <div style="color: white">
-                        @if(session()->has($phongchieu_) && is_array(session($phongchieu_)))
-                            @foreach (session($phongchieu_) as $rows)
-                                Phòng chiếu : {{ $rows['tenphongchieu'] }}
-                            @endforeach
-                            |
-                        @endif
+                    <div id="phongchieu" style="color: white">
+                      
                     </div>
                     <div class ="ghe_chon">
                       
 
                     </div>
-                    <div  style="margin: 0 5px; color: white">
-                        @if(session()->has($chongio_))
-                        @foreach (session($chongio_) as $row)
-                        
-                        |{{ $row['giochieu'] }}
-                        @endforeach
-                        @endif
+                    <div id="giochieu" style="margin: 0 5px; color: white">
+                      
                     </div>
 
                 </div>
@@ -720,243 +616,474 @@ xemthem.addEventListener('click',function(){
 });
   </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
  
   <script>
 
-    var element = document.getElementById('scrollTarget');
-var elementRect = element.getBoundingClientRect();
-var absoluteElementTop = elementRect.top + window.pageYOffset;
-var middle = absoluteElementTop - (window.innerHeight / 2);
-window.scrollTo(0, middle);
-
-   
-
-
+  //  var element = document.getElementById('scrollTarget');
+//var elementRect = element.getBoundingClientRect();
+//var absoluteElementTop = elementRect.top + window.pageYOffset;
+//var middle = absoluteElementTop - (window.innerHeight / 2);
+//window.scrollTo(0, middle);
  
-    const menuItems = document.querySelectorAll('.menu-ngay');
+const menuItems = document.querySelectorAll('.menu-ngay');
 
 // Lặp qua từng phần tử menu và kiểm tra xem trang hiện tại có liên kết với menu đó không
 menuItems.forEach(item => {
-    console.log(item);
-    if (window.location.href.includes(item.dataset.href)) {
-        item.classList.add('ngaychieu_active');
-    }
-});
-const giochieus = document.querySelectorAll('.menu-giochieu');
-
-// Lặp qua từng phần tử menu và kiểm tra xem trang hiện tại có liên kết với menu đó không
-giochieus.forEach(item => {
-    console.log(item);
-    if (window.location.href.includes(item.dataset.href)) {
-        item.classList.add('ngaychieu_active');
-    }
-});
-
-    
-   
-    $('.submitForm').on('click', function(e) {
-        e.preventDefault();
+    item.addEventListener('click', function() {
        
-  
-        var seatData = $(this).data('seat');
-        console.log(seatData);
-        var button = $(this);
-        $.ajax({
-            url: "{{ route('datghe.maghe') }}",
+        menuItems.forEach(menuItem => {
+            menuItem.classList.remove('ngaychieu_active');
+        });
+
+       
+        item.classList.add('ngaychieu_active');
+    });
+});
+
+const assetPath = '{{ asset('assets1') }}';
+function renderSeats(seatRows, id_ghe_dat_, ds_ghe_) {
+    let tableBody = $('#seatTableBody');
+    tableBody.empty(); // Xóa nội dung cũ
+
+    $.each(seatRows, function(row, seatsInRow) {
+        let rowElement = $('<tr>').css({ 'margin-top': '20px', 'display': 'flex' });
+
+        let rowHeader = $('<td>').css({ 'margin-right': '20px', 'align-items': 'center', 'display': 'flex', 'flex': '1', 'justify-content': 'center' }).text(row);
+        rowElement.append(rowHeader);
+
+        $.each(seatsInRow, function(index, seat) {
+            let seatElement = $('<td>').css({ 'align-items': 'center', 'display': 'flex', 'flex': '1', 'justify-content': 'center' });
+
+            if (id_ghe_dat_.includes(seat.id)) {
+                let seatDiv = $('<div>').css({ 'background-color': 'transparent', 'border': 'none', 'outline': 'none', 'padding': '0', 'position': 'relative' });
+
+                let seatImg = $('<img>').attr('src','{{ asset('assets1/img/seat-single-disable.svg') }}').css('width', '100%');
+                let seatSpan = $('<span>').text(seat.tenghe).css({ 'left': '50%', 'top': '100%', 'transform': 'translateX(-50%)', 'z-index': '2', 'font-size': '0.9rem', 'position': 'absolute', 'color': 'white' });
+
+                seatDiv.append(seatImg).append(seatSpan);
+                seatElement.append(seatDiv);
+            } else {
+                var route = `{{ route('datghe.maghe') }}`;
+
+                let form = $('<form>').addClass('myForm').attr('action', route).attr('method', 'post');
+                form.append($('<input>').attr('type', 'hidden').attr('name', '_token').val('{{ csrf_token() }}'));
+                form.append($('<input>').attr('type', 'hidden').attr('name', 'seat_id').val(seat.id));
+
+                let danhSachGhe = $('<div>').addClass('danh-sach-ghe');
+                let seatButton = $('<button>').css({ 'background-color': 'transparent', 'border': 'none', 'outline': 'none', 'padding': '0', 'position': 'relative' }).addClass('seat-button submitForm').data('seat', seat);
+
+                if (ds_ghe_ && ds_ghe_.map(ghe => ghe.id).includes(seat.id)) {
+                    seatButton.append($('<img>').attr('src', '{{ asset('assets1/img/seat-single-selecting.svg') }}').css('width', '100%'));
+                } else {
+                    seatButton.append($('<img>').attr('src', '{{ asset('assets1/img/seat-single.svg') }}').css('width', '100%'));
+                }
+
+                seatButton.append($('<span>').text(seat.tenghe).css({ 'left': '50%', 'top': '100%', 'transform': 'translateX(-50%)', 'z-index': '2', 'font-size': '0.9rem', 'position': 'absolute', 'color': 'white' }));
+                danhSachGhe.append(seatButton);
+                form.append(danhSachGhe);
+                seatElement.append(form);
+            }
+
+            rowElement.append(seatElement);
+        });
+
+        tableBody.append(rowElement);
+    });
+}
+$('.ajax-form').on('click', function(e){
+            e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+            var seatData = $(this).data('ngay');
+            
+            var url = $(this).attr('action');
+         
+            console.log(seatData);
+            console.log(url);
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+            $.ajax({
+            url: url,
             method: 'POST',
             data: {
-                _token: "{{ csrf_token() }}",
-                seat_id: seatData.id
+                _token: csrfToken,
+                ngaychieu: seatData
             },
             success: function(response) {
-
-                console.log(response.du_ghe);
-                console.log(response.so_luong);
-                if(response.du_ghe == response.so_luong) {
-                    $("#datve").html('<a href="{{ route("thanhtoan") }}" class="text-black"><div style="background-color: #f3ea28; height: 40px; line-height: 40px;border-radius: 5px;font-size: 18px; font-weight: bold; " class="text-center text-b">Đặt vé</div></a>');
-                }else{
-                    $("#datve").html('<div style="background-color: #f3ea28; height: 40px; line-height: 40px;border-radius: 5px;font-size: 18px; font-weight: bold ; opacity: 0.5;" class="  text-center text-black">Đặt vé</div>');
-                }
-                
-          
+                console.log(response); // Kiểm tra kết quả AJAX
               
-                if(response.expires_at){
-                    setInterval(function() {
-                                var currentTime = Math.floor(Date.now() / 1000); // Thời gian hiện tại tính theo giây
-                                var sessionExpiresAt = response.expires_at;
-                                var sessionLifetime = Math.max(0, sessionExpiresAt - currentTime); // Đảm bảo thời gian sống không âm
-                                var minutes = Math.floor(sessionLifetime / 60);
-                                var seconds = sessionLifetime % 60;
-                                if (minutes < 10) {
-                                    minutes = "0" + minutes;
-                                }
-                                if (seconds < 10) {
-                                    seconds = "0" + seconds;
-                                }
-                                var message =  minutes + ' : ' + seconds ;
-                                document.getElementById('sessionLifetime').innerHTML = message;
-                                if(minutes === '00' && seconds=='00'){
-                               
-                                    document.querySelector('.modal_het_time').style.display = "block";
+                let html = '';
+                var suatchieus_gio = response.suatchieus_gio;
+                html += '<p id="scrollTarget" style="margin: 40px 0; font-size: 20px;font-weight: bold;" class="text-center text-white">Chọn suất chiếu</p>' +
+                        '<div style="display: flex; align-items: center;justify-content: center; margin: 20px 0;">';
+                
+                suatchieus_gio.forEach(function(item) {
+                    var gioHienTai = moment();
+                    var ngayGioSuatChieu = moment(item.thoigianchieu, 'YYYY-MM-DD HH:mm:ss');
+                    var gio = moment(item.thoigianchieu, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
+                    var route = `{{ route('datve.suatchieu') }}`;
+                    if (moment(gioHienTai, 'HH:mm').isAfter(moment(ngayGioSuatChieu, 'HH:mm'))) {
+                        html += '<div style="margin-right: 20px">' +
+                           
+                           
+                            '<button style=" border-color: rgba(255, 255, 255, 0.4);color:rgba(255,255,255,0.4)" class="btn ngaychieu menu-giochieu" data-id="' + item.id + '">' +
+                            gio +
+                            '</button>' +
+                            
+                            '</div>';
+                        console.log("Giờ hiện tại lớn hơn giờ của suất chiếu");
+                    } else {
+                        html += '<div style="margin-right: 20px">' +
+                            '<form class="form_xuatchieu"  data-id="' + item.id + '" action="' + route + '" method="POST">' +
+                            '@csrf' +
+                            '<input type="hidden" name="id_suatchieu" value="' + item.id + '">'+
+                            '<button type="submit" class="btn ngaychieu menu-giochieu" data-id="' + item.id + '">' +
+                            gio +
+                            '</button>' +
+                            '</form>' +
+                            '</div>';
+                        console.log("Giờ hiện tại không lớn hơn giờ của suất chiếu");
+                    }
+
+                  
+                   
+                });
+
+                html += '</div>';
+                console.log(html);
+                $('#suatchieu').html(html);
+                let soluong_ghe = $('#soluong_ghe');
+                soluong_ghe.empty(); 
+                const giochieus = document.querySelectorAll('.menu-giochieu');
+
+
+                giochieus.forEach(item => {
+                    
+                    item.addEventListener('click',function(){
+                        giochieus.forEach(ite => {
+                            ite.classList.remove('ngaychieu_active');
+                        });
+                        item.classList.add('ngaychieu_active');
+                    });
+                });
+                $('.form_xuatchieu').on('click', function(e){
+                    e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+                    var id = $(this).data('id');
+                   
+                    var url_suatchieu = $(this).attr('action');
+                    
+                    $.ajax({
+                        url: url_suatchieu,
+                        method: 'POST',
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            id_suatchieu: id
+                        },
+                        success: function(response) {
+                            
+                            console.log(response);
+                            let tenPhongChieu;
+                            response.phongchieu_.forEach(function(row) {
+                                tenPhongChieu = row.tenphongchieu;
+                            });
+                            $('#phongchieu').html('Phòng chiếu ' + tenPhongChieu + ' |');
+                            let tengiochieu;
+                            response.chongio_.forEach(function(row) {
+                                tengiochieu = row.giochieu;
+                            });
+                            
+                            $('#giochieu').html('| '+tengiochieu);
+                            let html = '';
+                            html +=' <p style="margin:20px 0; font-size: 20px;font-weight: bold;" class="text-center text-white">Mua vé</p>'+
+                                    '<div class="soluong" style="margin: auto; border: 1px solid #f3ea28;border-radius: 5px;">'+
+                                        '<p style="margin:20px 0; font-size: 20px;font-weight: bold;" class="text-center text-white">Người lớn / <span style="color: #f3ea28">Đơn</span></p>'+
+                                       '<p style="margin:20px 0; font-size: 20px;font-weight: bold;" class="text-center text-white">'+response.giave_.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replace('₫', ' VND')+'</p>'+
+                                        '<div class="count">'+
+                                            '<div class="count-btn count-minus">'+
+                                                '<i class="fas fa-minus icon"></i>'+
+                                            '</div>'+
+                                            
+                                            '<p class="count-number">{{ session($so_luong_,0) }}</p>'+
+                                            '<div class="count-btn count-plus">'+
+                                                '<i class="fas fa-plus icon"></i>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'+
+                            
+                                    '<div>'+
+                                        '<div style="margin: 40px 0;">'+
+                                            '<img style="width: 100%" src="{{ asset("assets/img/img-screen.png") }}" class="lazyload" alt=""> '+
+                                            '<div class = "manhinh">Màn hình</div>'+
+                                        '</div>'+
+
+                                        
+                                        '<div id="success-toast" style="display: none" class="alert alert-success" role="alert">'+
+                                                
+                                        '</div>'+
+                                        '<div class="seat-table table_ghe">'+
+                                            '<table id="seatTableBody">'+
+                                              
+                                            '</table>'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div style="display: flex; justify-content: center; margin-top: 40px;">'+
+                                        '<div style="margin: 0 20px;display: flex;flex-direction: column;align-items: center;">'+
+                                            '<img style="width: 3.2rem" src="{{asset('assets1/img/seat-single-disable.svg')}}"  class="lazyload" alt="">'+
+                                            '<div class="text-white text-center">Ghế đã đặt</div>'+
+                                        '</div>'+
+                                        '<div style="margin: 0 20px;display: flex;flex-direction: column;align-items: center;">'+
+                                            '<img style="width: 3.2rem; " src="{{ asset('assets1/img/seat-single.svg') }}" class="lazyload" alt="">'+
+                                            '<div class="text-white text-center">Ghế trống</div>'+
+                                        '</div>'+
+                                        '<div style="margin: 0 20px;display: flex;flex-direction: column;align-items: center;">'+
+                                            '<img style="width: 3.2rem" src="{{ asset('assets1/img/seat-single-selecting.svg') }}" class="lazyload" alt="">'+
+                                            '<div class="text-white text-center">Ghế chọn</div>'+
+                                        '</div>'+
+                                    '</div>';
+            
+
+                            
+
+
+                            $('#soluong_ghe').html(html);
+                            renderSeats(response.seatRows, response.id_ghe_dat_, response.ds_ghe_);
+                            
+
+                            var countNumber = $('.count-number');
+                            var countNumber1 = $('.count-number1');
+                            var countMinus = $('.count-minus');
+                            var countPlus = $('.count-plus');
+
+                            
+                            countPlus.click(function() {
+                                var currentValue = parseInt(countNumber.text());
+                                var currentValue1 = parseInt(countNumber1.text());
+                                countNumber.text(currentValue + 1);
+                                countNumber1.text(currentValue1 + 1);
+                                luuGiaTriSoLuong(countNumber.text());
+                                $('.ghe_chon').empty();
+                                
+                            });
+                            countMinus.click(function() {
+                                var currentValue = parseInt(countNumber.text());
+                                var currentValue1 = parseInt(countNumber1.text());
+                                if (currentValue > 0) {
+                                    countNumber.text(currentValue - 1);
+                                    countNumber1.text(currentValue1 - 1);
+                                    luuGiaTriSoLuong(countNumber.text());
+                                    $('.ghe_chon').empty();
                                     
                                 }
-                                
-                            }, 1000);
-                }
-                if(response.message){
-                    var successToast = $("#success-toast");
-                    successToast.html(response.message);
-                    successToast.fadeIn("slow");
-
-                    setTimeout(function() {
-                        successToast.fadeOut("slow", function() {
-                            $(this).html(""); // Xóa nội dung của toast sau khi hoàn thành hiệu ứng fadeOut
-                        });
-                    }, 3000); 
-                }
-
-                if(response.mo==0){
-                    
-                }
-                
-               
-                console.log("ds");
-                console.log(response.ds_ghe);
-                let tempArray = [];
-                var tenGhe = '';
-                if (response.ds_ghe == "") { 
-                    $('.ghe_chon').empty();
-                       $('.danh-sach-ghe .seat-button img').attr('src', '{{ asset('assets1/img/seat-single.svg') }}');
-                      
-                 }else if (response && response.ds_ghe && Array.isArray(response.ds_ghe)) {
-                        
-                        response.ds_ghe.forEach((element, index) => {
-                            tempArray.push(element.tenghe);
                             
-                            if (element.tenghe === seatData.tenghe) {
+                            });
+
+
+                            // Hàm gửi yêu cầu AJAX
+                            function luuGiaTriSoLuong(value) {
+                                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                                $.ajax({
+                                    url: "{{ route('luu_gia_tri_so_luong') }}",
+                                    type: "POST",
+                                    data: {
+                                        _token: csrfToken,
+                                        so_luong: value
+                                    },
+                                    success: function(response) {
+                                        console.log("tong tien " +response.tongtien);
+                                        console.log("soluong " +response.so_luong);
+                                        var soluong =response.so_luong;
+                                        var tamtinh =response.tongtien;
+                                        document.getElementById('chon_sl').innerHTML = soluong;
+                                        document.getElementById('tam_tinh').innerHTML = tamtinh;
+                                        
+
+                                        $.ajax({
+                                        url: "{{ route('datghe.maghe') }}",
+                                        type: "POST",
+                                        data: {
+                                            _token: "{{ csrf_token() }}",
+                                            
+                                        },
+                                        success: function(response) {
+                                            
+                                            if (response.ds_ghe.length == 0) { 
+                                            
+                                                $('.danh-sach-ghe .seat-button img').attr('src', '{{ asset('assets1/img/seat-single.svg') }}');
+                                            
+                                            }
+                                        
+                                            
+                                            
+                                        },
+                                        error: function(xhr) {
+                                            console.error(xhr.responseText);
+                                        }
+                                        });
                                 
-                                
-                                // Nếu tìm thấy ghế tương ứng, thay đổi hình ảnh của nút ghế
-                                $('.seat-button[data-seat=\'{"id":' + seatData.id + ',"tenghe":"' + seatData.tenghe + '"}\'] img').attr('src', '{{ asset("assets1/img/seat-single-selecting.svg") }}');
-                            }else{
-                                $('.seat-button[data-seat=\'{"id":' + seatData.id + ',"tenghe":"' + seatData.tenghe + '"}\'] img').attr('src', '{{ asset("assets1/img/seat-single.svg") }}');
+                                    },
+                                    error: function(xhr) {
+                                        console.error(xhr.responseText);
+                                    }
+                                });
                             }
 
-                            
-                           
-                        });
+                            $('.submitForm').on('click', function(e) {
+                                            e.preventDefault();
+                                        
+                                    
+                                            var seatData = $(this).data('seat');
+                                            console.log("seatdata",seatData);
+                                            var button = $(this);
+                                            $.ajax({
+                                                url: "{{ route('datghe.maghe') }}",
+                                                method: 'POST',
+                                                data: {
+                                                    _token: "{{ csrf_token() }}",
+                                                    seat_id: seatData.id
+                                                },
+                                                success: function(response) {
 
-                        tempArray.sort((a, b) => {
-                            // Trích xuất số ghế từ chuỗi, ví dụ: A02 -> 02
-                            const seatNumberA = parseInt(a.substring(1));
-                            const seatNumberB = parseInt(b.substring(1));
-                            // So sánh số ghế và trả về kết quả
-                            return seatNumberA - seatNumberB;
-                        });
-                        tenGhe += ' ';
-                        tenGhe = tempArray.join(' , ');
+                                                    console.log(response.du_ghe);
+                                                    console.log(response.so_luong);
+                                                    if(response.du_ghe == response.so_luong) {
+                                                        $("#datve").html('<a href="{{ route("thanhtoan") }}" class="text-black"><div style="background-color: #f3ea28; height: 40px; line-height: 40px;border-radius: 5px;font-size: 18px; font-weight: bold; " class="text-center text-b">Đặt vé</div></a>');
+                                                    }else{
+                                                        $("#datve").html('<div style="background-color: #f3ea28; height: 40px; line-height: 40px;border-radius: 5px;font-size: 18px; font-weight: bold ; opacity: 0.5;" class="  text-center text-black">Đặt vé</div>');
+                                                    }
+                                                    
+                                            
+                                                
+                                                    if(response.expires_at){
+                                                        setInterval(function() {
+                                                                    var currentTime = Math.floor(Date.now() / 1000); // Thời gian hiện tại tính theo giây
+                                                                    var sessionExpiresAt = response.expires_at;
+                                                                    var sessionLifetime = Math.max(0, sessionExpiresAt - currentTime); // Đảm bảo thời gian sống không âm
+                                                                    var minutes = Math.floor(sessionLifetime / 60);
+                                                                    var seconds = sessionLifetime % 60;
+                                                                    if (minutes < 10) {
+                                                                        minutes = "0" + minutes;
+                                                                    }
+                                                                    if (seconds < 10) {
+                                                                        seconds = "0" + seconds;
+                                                                    }
+                                                                    var message =  minutes + ' : ' + seconds ;
+                                                                    document.getElementById('sessionLifetime').innerHTML = message;
+                                                                    if(minutes === '00' && seconds=='00'){
+                                                                
+                                                                        document.querySelector('.modal_het_time').style.display = "block";
+                                                                        
+                                                                    }
+                                                                    
+                                                                }, 1000);
+                                                    }
+                                                    if(response.message){
+                                                        var successToast = $("#success-toast");
+                                                        successToast.html(response.message);
+                                                        successToast.fadeIn("slow");
 
-                       
-                        $('.ghe_chon').text(tenGhe);
-        
-                }
+                                                        setTimeout(function() {
+                                                            successToast.fadeOut("slow", function() {
+                                                                $(this).html(""); // Xóa nội dung của toast sau khi hoàn thành hiệu ứng fadeOut
+                                                            });
+                                                        }, 3000); 
+                                                    }
+
+                                                    if(response.mo==0){
+                                                        
+                                                    }
+                                                    
+                                                
+                                                    console.log("ds");
+                                                    console.log(response.ds_ghe);
+                                                    let tempArray = [];
+                                                    var tenGhe = '';
+                                                    if (response.ds_ghe == "") { 
+                                                        $('.ghe_chon').empty();
+                                                        $('.danh-sach-ghe .seat-button img').attr('src', '{{ asset('assets1/img/seat-single.svg') }}');
+                                                        
+                                                    }else if (response && response.ds_ghe && Array.isArray(response.ds_ghe)) {
+                                                            
+                                                            response.ds_ghe.forEach((element, index) => {
+                                                                tempArray.push(element.tenghe);
+                                                                
+                                                                if (element.tenghe === seatData.tenghe) {
+                                                                    
+                                                                    
+                                                                    // Nếu tìm thấy ghế tương ứng, thay đổi hình ảnh của nút ghế
+                                                                    button.find('img').attr('src', '{{ asset('assets1/img/seat-single-selecting.svg') }}');
+                                                                }else{
+                                                                    button.find('img').attr('src', '{{ asset('assets1/img/seat-single.svg') }}');
+                                                                    
+                                                                }
+
+                                                                
+                                                            
+                                                            });
+
+                                                            tempArray.sort((a, b) => {
+                                                                // Trích xuất số ghế từ chuỗi, ví dụ: A02 -> 02
+                                                                const seatNumberA = parseInt(a.substring(1));
+                                                                const seatNumberB = parseInt(b.substring(1));
+                                                                // So sánh số ghế và trả về kết quả
+                                                                return seatNumberA - seatNumberB;
+                                                            });
+                                                            tenGhe += ' ';
+                                                            tenGhe = tempArray.join(' , ');
+
+                                                        
+                                                            $('.ghe_chon').text(tenGhe);
+                                            
+                                                    }
+                                                    
+                                                
+                                                    
+                                                },
+                                                error: function(xhr) {
+                                                    // Xử lý lỗi nếu có
+                                                    console.error(xhr.responseText);
+                                                }
+                                            });
+                                            
+                                        });
+
+                        },
+
+                        error: function(xhr) {
+                            // Xử lý lỗi nếu có
+                            console.error(xhr.responseText);
+                        }
+                        });
+                     });
                 
-               
-                
+         
             },
+
             error: function(xhr) {
                 // Xử lý lỗi nếu có
                 console.error(xhr.responseText);
             }
+            });
         });
-        
-    });
+   
+
+                                    
 
 
-
-
-
-
-    var countNumber = $('.count-number');
-    var countNumber1 = $('.count-number1');
-    var countMinus = $('.count-minus');
-    var countPlus = $('.count-plus');
 
     
-    countPlus.click(function() {
-        var currentValue = parseInt(countNumber.text());
-        var currentValue1 = parseInt(countNumber1.text());
-        countNumber.text(currentValue + 1);
-        countNumber1.text(currentValue1 + 1);
-        luuGiaTriSoLuong(countNumber.text());
-        $('.ghe_chon').empty();
-        
-    });
-    countMinus.click(function() {
-        var currentValue = parseInt(countNumber.text());
-        var currentValue1 = parseInt(countNumber1.text());
-        if (currentValue > 0) {
-            countNumber.text(currentValue - 1);
-            countNumber1.text(currentValue1 - 1);
-            luuGiaTriSoLuong(countNumber.text());
-            $('.ghe_chon').empty();
-            
-        }
+   
+    
+
+
+
+
+
+   
+
+   
        
-    });
-
-
-    // Hàm gửi yêu cầu AJAX
-    function luuGiaTriSoLuong(value) {
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        $.ajax({
-            url: "{{ route('luu_gia_tri_so_luong') }}",
-            type: "POST",
-            data: {
-                _token: csrfToken,
-                so_luong: value
-            },
-            success: function(response) {
-                console.log("tong tien " +response.tongtien);
-                console.log("soluong " +response.so_luong);
-                var soluong =response.so_luong;
-                var tamtinh =response.tongtien;
-                document.getElementById('chon_sl').innerHTML = soluong;
-                document.getElementById('tam_tinh').innerHTML = tamtinh;
-                
-
-               
-                $.ajax({
-                url: "{{ route('datghe.maghe') }}",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    // Gửi các thông tin cần thiết khác nếu có
-                },
-                success: function(response) {
-                    
-                    if (response.ds_ghe.length == 0) { 
-                       
-                        $('.danh-sach-ghe .seat-button img').attr('src', '{{ asset('assets1/img/seat-single.svg') }}');
-                       
-                    }
-                   
-                       
-                    
-                },
-                error: function(xhr) {
-                    console.error(xhr.responseText);
-                }
-                });
-           
-            },
-            error: function(xhr) {
-                console.error(xhr.responseText);
-            }
-        });
-    }
-
+   
+   
   </script>
 
   
