@@ -24,11 +24,11 @@
                 <span>Email: 20T1020089@husc.edu.vn</span><br>
                 
                 <div class="social-links mt-3">
-                  <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                  <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                  <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                  <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                  <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+                  <a href="https://www.facebook.com/sinh.nguyenxuan.712" class="twitter"><i class="bx bxl-twitter"></i></a>
+                  <a href="https://www.facebook.com/sinh.nguyenxuan.712" class="facebook"><i class="bx bxl-facebook"></i></a>
+                  <a href="https://www.facebook.com/sinh.nguyenxuan.712" class="instagram"><i class="bx bxl-instagram"></i></a>
+                  <a href="https://www.facebook.com/sinh.nguyenxuan.712" class="google-plus"><i class="bx bxl-skype"></i></a>
+                  <a href="https://www.facebook.com/sinh.nguyenxuan.712" class="linkedin"><i class="bx bxl-linkedin"></i></a>
                 </div>
               </div>
             </div>
@@ -55,7 +55,7 @@
               <div>
                 <h4>StarCinema</h4>
                 <ul>
-                  <li><i class="bx bx-chevron-right"></i> <a href="#">Giới thiệu</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="{{ route('user.gioithieu') }}">Giới thiệu</a></li>
                   <li><i class="bx bx-chevron-right"></i> <a href="{{ route('user.index') }}/#lienhe">Liên hệ</a></li>
                   
                 </ul>
