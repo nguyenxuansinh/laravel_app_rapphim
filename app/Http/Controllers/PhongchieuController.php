@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chongoi;
+use App\Models\ghe;
 use App\Models\phongchieu;
+use App\Models\suatchieu;
 use Illuminate\Http\Request;
 
 class PhongchieuController extends Controller
@@ -44,9 +47,25 @@ class PhongchieuController extends Controller
 
     public function delete($id)
     {
+        $phongchieu = Phongchieu::findOrFail($id);
+        $ghes = Ghe::where('id_phongchieu', $phongchieu->id)->get();
+        $suatchieus = suatchieu::where('id_phongchieu', $phongchieu->id)->get();
+       
+        // Xóa tất cả các ghế thuộc về phòng chiếu này
+        foreach ($ghes as $ghe) {
+            $ghe->delete();
+        }
 
-        $phongchieus = phongchieu::find($id);
-        $phongchieus->delete();
+        foreach ($suatchieus as $suatchieu) {
+            $chongois = Chongoi::where('id_suatchieu', $suatchieu->id)->get();
+            foreach ($chongois as $chongoi) {
+                $chongoi->delete();
+            }
+           $suatchieu->delete();
+        }
+        $phongchieu->delete();
+       
+        
 
         return redirect()->route("phongchieu.index");
     }

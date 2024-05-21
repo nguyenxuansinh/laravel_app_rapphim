@@ -69,9 +69,14 @@ class UserController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password,'phanquyen'=>0 ])) {
             if (auth()->user()->email_verified_at !== null) {
 
+
             return redirect()->route('user.index');
             }else{
-                abort(403, 'Unauthorized action.');
+                $user = User::where('email', $request->email)->first();
+                $tieude = "Hi : " . $user->hovaten;
+                Mail::to($user->email)->send(new verify($tieude, $user));
+                abort(403, 'Tài khoản chưa active. Hãy vào email để active');
+                
             }
         } else {
             abort(403, 'Unauthorized action.');
@@ -1051,6 +1056,7 @@ class UserController extends Controller
             $products = DB::table('phim')
                             ->where('tenphim', 'like', '%' . $searchTerm . '%')
                             ->orWhere('daodien', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('dienvienchinh', 'like', '%' . $searchTerm . '%')
                             ->get();
         
             return view('home_user.timkiem', compact('products'));
