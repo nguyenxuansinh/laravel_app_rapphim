@@ -39,35 +39,52 @@
                             <div class="text-center">
                                 <h1 class="h4 text-white mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user"  method="POST" action="{{ route('user.create') }}">
+                            <form class="user" method="POST" action="{{ route('user.create') }}">
                                 @csrf
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="Họ và tên" name="hovaten" required>
+                                               placeholder="Họ và tên" name="hovaten" required>
+                                        @if ($errors->has('hovaten'))
+                                            <span class="text-danger">{{ $errors->first('hovaten') }}</span>
+                                        @endif
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Số điện thoại" name="sodienthoai" required>
+                                               placeholder="Số điện thoại" name="sodienthoai" required>
+                                        @if ($errors->has('sodienthoai'))
+                                            <span class="text-danger">{{ $errors->first('sodienthoai') }}</span>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" id="exampleInputEmail"
-                                    placeholder="Địa chỉ" name="diachi" required>
+                                    <input type="text" class="form-control form-control-user" id="examdiachi"
+                                           placeholder="Địa chỉ" name="diachi" required>
+                                    @if ($errors->has('diachi'))
+                                        <span class="text-danger">{{ $errors->first('diachi') }}</span>
+                                    @endif
                                 </div>
                                 <div class="form-group">
-                                   
                                     <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address" name="email" required>
+                                           placeholder="Email Address" name="email" required>
+                                    @if ($errors->has('email'))
+                                        <span class="text-danger">{{ $errors->first('email') }}</span>
+                                    @endif
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password" name="password" required>
+                                               id="exampleInputPassword" placeholder="Password" name="password" required>
+                                        @if ($errors->has('password'))
+                                            <span class="text-danger">{{ $errors->first('password') }}</span>
+                                        @endif
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password" name="repeatpassword" required>
+                                               id="exampleRepeatPassword" placeholder="Repeat Password" name="password_confirmation" required>
+                                        @if ($errors->has('password_confirmation'))
+                                            <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
+                                        @endif
                                     </div>
                                 </div>
                                 <button style="background-color: #f3ea28; color: black; font-weight: bold; font-size: 16px;" type="submit" class="btn btn-user btn-block">

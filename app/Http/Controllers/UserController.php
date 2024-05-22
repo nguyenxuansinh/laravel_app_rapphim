@@ -97,28 +97,35 @@ class UserController extends Controller
     }
 
     public function store(Request $request){
+
+        
         $request->validate([
-            'password' => 'required|min:8',
-            'repeat_password' => 'required|same:password',
+            'hovaten' => 'required|string|max:255',
+            'diachi' => 'required|string|max:255',
+            'sodienthoai' => 'required|string|max:15',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
         ]);
         
         
-        if($user = User::create([
-            'hovaten'=>$request->hovaten,
-            'diachi'=>$request->diachi,
-            'sodienthoai'=>$request->sodienthoai,
+        
+        $user = User::create([
+            'hovaten' => $request->hovaten,
+            'diachi' => $request->diachi,
+            'sodienthoai' => $request->sodienthoai,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-        ])){
+            'phanquyen' => 0,
+            'danhhieu'=>"C'Friends",
+        ]);
 
-           
+        if ($user) {
             $tieude = "Hi : " . $user->hovaten;
 
             Mail::to($user->email)->send(new verify($tieude, $user));
 
             return redirect()->route('user.login');
         }
-        
 
 
 

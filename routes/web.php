@@ -26,13 +26,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('user/login', [UserController::class, 'login'])->name('user.login');
 Route::get('verify-account/{email}', [UserController::class, 'verify'])->name('user.verify');
-Route::post('user/login', [UserController::class, 'checklogin'])->name('user.loginpost');
+Route::post('user/login_check', [UserController::class, 'checklogin'])->name('user.loginpost');
 
 Route::get('/register', [UserController::class, 'register'])->name('user.register');
-Route::post('/register', [UserController::class, 'store'])->name('user.create');
+Route::post('/user/create', [UserController::class,'store'])->name('user.create');
 
 Route::get('/for_got', [UserController::class, 'for_got'])->name('user.for_got');
-Route::post('/for_got', [UserController::class, 'for_got_check'])->name('user.for_got');
+Route::post('/for_got_check', [UserController::class, 'for_got_check'])->name('user.for_got');
 Route::get('change-account/{email}', [UserController::class, 'change_pass'])->name('user.change');
 Route::post('/doimatkhau', [UserController::class, 'doimatkhau'])->name('user.doimatkhau');
 

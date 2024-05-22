@@ -64,7 +64,7 @@
                                         <a class=" text-white small" href="{{ route('user.for_got') }}">Forgot Password?</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class=" text-white small" href="/register">Create an Account!</a>
+                                        <a class=" text-white small" href="{{ route('user.register') }}">Create an Account!</a>
                                     </div>
                                 </div>
                             </div>
