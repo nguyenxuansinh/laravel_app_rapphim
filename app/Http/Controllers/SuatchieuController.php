@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chongoi;
 use App\Models\phim;
 use App\Models\phongchieu;
 use App\Models\suatchieu;
@@ -118,6 +119,10 @@ class SuatchieuController extends Controller
     {
 
         $suatchieus = suatchieu::find($id);
+        $chongois = Chongoi::where('id_suatchieu', $suatchieus->id)->get();
+        foreach ($chongois as $chongoi) {
+            $chongoi->delete();
+        }
         $suatchieus->delete();
 
         return redirect()->route("suatchieu.index");

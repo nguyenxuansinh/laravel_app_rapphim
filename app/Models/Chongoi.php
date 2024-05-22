@@ -18,10 +18,10 @@ class Chongoi extends Model
         
     ];
 
-    public function ghevatly()
+    /*public function ghevatly()
     {
         return $this->belongsTo(Ghe::class, 'id_ghe');
-    }
+    }*/
 
     public function hoadon()
     {

@@ -274,11 +274,12 @@ menuItems.forEach(item => {
                 })
                 sovemua += '</div>';
                 let html = '<div class="text-white">';
+                
+                    response.ghes.forEach(ghes => {
+                        let tenGhe = ghes.ten_ghe; // Sử dụng đúng tên thuộc tính ten_ghe
+                        html += tenGhe + ', '; // Thêm chuỗi tenGhe vào biến html
+                    });
 
-                response.chongoi.forEach(chongoi => {
-                    let tenGhe = chongoi.ghevatly.tenghe;
-                    html += tenGhe + ', ';
-                });
 
                 // Loại bỏ dấu phẩy cuối cùng nếu có
                 html = html.slice(0, -2);

@@ -681,8 +681,30 @@ class UserController extends Controller
             $id_hoadon = $request->input('id');
 
             $hoadons = Hoadon::where('id',$id_hoadon)->get();
-            $chongoi = ChonGoi::where('id_thanhtoan', $id_hoadon)->with(['ghevatly', 'suatchieu'])->get();
-           
+            
+            /*$chongoi = ChonGoi::where('id_thanhtoan', $id_hoadon)->with(['ghevatly', 'suatchieu'])->get();
+            */
+            $chongoi = ChonGoi::where('id_thanhtoan', $id_hoadon)
+                        ->with('suatchieu')
+                        ->get();
+                        $ghes = [];
+
+                        // Lặp qua từng chọn ghế để lấy thông tin ghế tương ứng
+                        foreach ($chongoi as $chon) {
+                            $gheId = $chon->id_ghe;
+                            // Lấy thông tin ghế từ id_ghe
+                            $ghe = ghe::find($gheId);
+                            // Nếu không tìm thấy thông tin ghế, gán tên ghế là null
+                            $tenGhe = $ghe ? $ghe->tenghe : null;
+                    
+                            // Thêm thông tin ghế vào mảng
+                            $ghes[] = [
+                                'ten_ghe' => $tenGhe,
+                                // Các thông tin khác của chọn ghế
+                                'trangthai' => $chon->trangthai,
+                                // Và các thông tin khác bạn muốn bao gồm
+                            ];
+                        }
             $firstChongoi = $chongoi->first();
             $phimId = $firstChongoi->suatchieu->id_phim;
             $phim = Phim::find($phimId);
@@ -690,7 +712,7 @@ class UserController extends Controller
             $ngaychieu = $firstChongoi->suatchieu->thoigianchieu;
             $phongchieuId = $firstChongoi->suatchieu->id_phongchieu;
             $phongchieu = Phongchieu::find($phongchieuId);
-            return response()->json(['chongoi' => $chongoi,'hoadon'=>$hoadons,'phim'=>$phim,'ngaychieu'=>$ngaychieu,'phongchieu'=>$phongchieu]);
+            return response()->json(['ghes' => $ghes,'hoadon'=>$hoadons,'phim'=>$phim,'ngaychieu'=>$ngaychieu,'phongchieu'=>$phongchieu]);
         }
         public function execPostRequest($url, $data)
         {

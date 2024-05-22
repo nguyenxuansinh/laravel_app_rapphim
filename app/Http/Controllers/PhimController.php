@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chongoi;
 use App\Models\phim;
+use App\Models\suatchieu;
 use Illuminate\Http\Request;
 
 class PhimController extends Controller
@@ -130,6 +132,16 @@ class PhimController extends Controller
     {
 
         $phim = phim::find($id);
+        $suatchieus = suatchieu::where('id_phim', $phim->id)->get();
+        foreach ($suatchieus as $suatchieu) {
+            $chongois = Chongoi::where('id_suatchieu', $suatchieu->id)->get();
+            foreach ($chongois as $chongoi) {
+                $chongoi->delete();
+            }
+           $suatchieu->delete();
+        }
+
+
         $phim->delete();
 
         return redirect()->route("phim.index");

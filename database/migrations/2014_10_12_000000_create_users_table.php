@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('sodienthoai');
             $table->integer('phanquyen')->default(0);
             $table->integer('tichdiem')->default(0);
-            $table->string('danhhieu')->default("C'Friends");
+            $table->string('danhhieu')->default('CFriends');  // Sửa giá trị mặc định ở đây
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
