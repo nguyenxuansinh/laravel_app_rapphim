@@ -11,6 +11,77 @@
         <link href="{{asset('assets2')}}/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
+    <style>
+            /*modal*/
+    .xemtrailer{
+        text-underline-offset: 2px ;
+         text-decoration: underline;
+          color: black; 
+          font-weight: bold; 
+          font-size: 20px;
+    }
+      .openModalBtn{
+        margin-top: 20px;
+      cursor: pointer;
+    }
+    .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    
+    }
+
+    /* Modal Content/Box */
+
+
+    .modal-content {
+        background-color:  rgba(0, 0, 0, 0.8);
+        margin: 5% auto;
+        padding: 5px;
+        
+        width: 80%;
+        max-width: 800px;
+    }
+
+    /* Close Button */
+    .close {
+        color: #aaa;
+        display: flex;
+        justify-content: flex-end;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close span{
+    width: 40px;
+    height: 40px;
+    text-align: center
+    }
+
+    .close span:hover,
+    .close span:focus{
+    color: white;
+    background-color: red;
+    }
+    .close:hover,
+    .close:focus {
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Video */
+    #videoPlayer {
+        width: 100%;
+        height: auto;
+    }
+        /*end_modal*/
+    </style>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
@@ -92,73 +163,37 @@
                             <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Phims</li>
                         </ol>
-            
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                DataTable
+                        <div class="row">
+                            <div class="col-4">
+                                <img style="width: 100%" src="{{ asset('image_phims/'.$phims->hinhanh) }}" alt="">
                             </div>
-                           
-                            <div class="card-body">
-                                <a href="{{ route('admin.create_product') }}" class="btn btn-primary mb-3">add</a>
-                                <table id="datatablesSimple">
-                                    <thead>
-                        
-                                        <tr>
-                                            
-                                            <th>Tên phim</th>
-                                            <th>Thể loại</th>
-                                            <th>Đạo diễn</th>
-                                                                            
-                                            <th>Hình ảnh phim</th>                                          
-                                            <th>Trạng thái</th>
-                                            <th>detail</th>
-                                            <th>edit</th>
-                                            <th>delete</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            
-                                            <th>Tên phim</th>
-                                            <th>Thể loại</th>
-                                            <th>Đạo diễn</th>
-                                                                              
-                                            <th>Hình ảnh phim</th>                                          
-                                            <th>Trạng thái</th>
-                                            <th>detail</th>
-                                            <th>edit</th>
-                                            <th>delete</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        @foreach ($phims as $item)
-                                        <tr>
-                                            
-                                            <td><div style="height: 75px; overflow-y: auto;">{{$item->tenphim}}</div></td>
-                                            <td><div style="height: 75px; overflow-y: auto;">{{$item->theloai}}</div></td>
-                                            <td><div style="height: 75px; overflow-y: auto;">{{$item->daodien}}</div></td>
-                                           
-                                            
-                                            <td><img height="75" width="80" src="{{asset('image_phims/'.$item->hinhanh)}}"></td>
-                                            
-                                            <td>{{$item->trangthai}}</td>
-                                            <td><a href="{{route('phim.detail',['id' => $item->id])}}" class="btn btn-success">detail</a></td>
-                                            <td><a href="{{route('phim.edit',['id' => $item->id])}}" class="btn btn-success">edit</a></td>
-                                            <td>
-                                                <form action="{{route('phim.delete',['id' => $item->id])}}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-warning">delete</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        @endforeach
+                            <div class="col-8">
+                                <p style="font-size: 2rem" class="text-black">{{ $phims->tenphim }}</p>
+                                <p class="text-black"><strong class="text-black">Thể loại:</strong> {{ $phims->theloai }}</p>
+                                <p class="text-black"><strong class="text-black">Thời lượng:</strong> {{ $phims->thoiluong }}</p>
+                                <p class="text-black"><strong class="text-black">Đạo diễn:</strong> {{ $phims->daodien }}</p>
+                                <p class="text-black"><strong class="text-black">Diễn viên:</strong> {{ $phims->dienvienchinh }}</p>
+                                
+                               
+                                <p class="text-black"><strong class="text-black">Ngày công chiếu:</strong> {{ \Carbon\Carbon::parse($phims->ngayphathanh)->format('d/m/Y') }}</p>
+                                <div style="overflow: hidden"><strong class="text-black">Mô tả:</strong><div class="mota text-black" style="height: 100px;">{{ $phims->mota }}</div></div>
+                                <div style="text-decoration: underline; " class="expand-button">Xem thêm</div>
+                                
+                                <div  class="openModalBtn" data-video-url="{{ asset('videos/' . $phims->video) }}" data-target="#videoModal{{$phims->id}}">
+                                    <img style="width: 40px" src="{{asset('assets1')}}/img/icon-play-vid.svg"  class="lazyload" alt="">
+                                    <span class="xemtrailer"> Xem Trailer</span>
                                     
-                                    </tbody>
-                                </table>
+                                 
+                                  </div>
+                                 
+                    
+                                  <!-- The Modal -->
+                                  <div id="videoModal{{$phims->id}}" class="modal">
+                                  
+                                  </div>
                             </div>
                         </div>
+                       
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
@@ -175,6 +210,23 @@
                 </footer>
             </div>
         </div>
+        <script>
+            var xemthem = document.querySelector('.expand-button');
+        
+        xemthem.addEventListener('click',function(){
+            if(xemthem.textContent == "Xem thêm"){
+                var mota = document.querySelector('.mota');
+                mota.style.height = 'auto';
+                xemthem.innerHTML = 'Thu gọn';
+            }else{
+                var mota = document.querySelector('.mota');
+                mota.style.height = '100px';
+                xemthem.innerHTML = 'Xem thêm';
+            }
+            
+        });
+          </script>
+          <script src="{{asset('assets1')}}/js/modal.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="{{asset('assets2')}}/js/scripts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>

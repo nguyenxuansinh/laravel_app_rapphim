@@ -75,6 +75,12 @@ class PhimController extends Controller
         return view('admin_product.edit')->with('phims',$phims);
     }
 
+    public function detail($id)
+    {
+        $phims = phim::find($id);
+        return view('home_admin.detail_phim')->with('phims',$phims);
+    }
+
     public function update(Request $request, string $id)
     {
         $phims = phim::find($id);

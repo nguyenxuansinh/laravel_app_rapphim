@@ -97,7 +97,8 @@ Route::group(['middleware' => 'checklogin_admin'], function () {
    Route::get('phim/edit/{id}', [PhimController::class, 'edit'])->name('phim.edit');
    Route::post('phim/update/{id}', [PhimController::class, 'update'])->name('phim.update');
    Route::delete('phim/delete/{id}', [PhimController::class, 'delete'])->name('phim.delete');
-   
+   Route::get('phim/detail/{id}', [PhimController::class, 'detail'])->name('phim.detail');
+  
 
    Route::get('phongchieu/index', [PhongchieuController::class, 'index'])->name('phongchieu.index');
    Route::get('admin/create_phongchieu', [AdminController::class, 'create_phongchieu'])->name('admin.create_phongchieu');
