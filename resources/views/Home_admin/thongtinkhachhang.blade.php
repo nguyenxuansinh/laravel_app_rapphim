@@ -18,7 +18,7 @@
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
-            
+           
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
                 <li class="nav-item dropdown">
@@ -41,7 +41,12 @@
                                 Dashboard
                             </a>
                            
-
+                            
+                           
+                           
+                            
+                                
+                            
                             <div class="sb-sidenav-menu-heading">Addons</div>
                             <a class="nav-link" href="{{route('thongtinkhachhang.index')}}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
@@ -82,10 +87,10 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Feedbacks</h1>
+                        <h1 class="mt-4">Thông tin khách hàng</h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Feedbacks</li>
+                            <li class="breadcrumb-item active">Thông tin khách hàng</li>
                         </ol>
             
                         <div class="card mb-4">
@@ -95,39 +100,40 @@
                             </div>
                            
                             <div class="card-body">
-                                <a href="{{ route('feedback.delete_all') }}" class="btn btn-primary mb-3">Xóa tất cả phản hồi đã trả lời</a>
+                              
                                 <table id="datatablesSimple">
                                     <thead>
                         
                                         <tr>
-                                            <th>Name</th>
+                                            <th>Họ và tên</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Số điện thoại</th>
                                             <th>Email</th>
-                                            <th>Message</th>
-                                            <th>Trạng thái</th>
-                                            <th>Trả lời</th>
-                                           
+                                            <th>Tích điểm</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>Name</th>
+                                            <th>Họ và tên</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Số điện thoại</th>
                                             <th>Email</th>
-                                            <th>Message</th>
-                                            <th>Trạng thái</th>
-                                            <th>Trả lời</th>
+                                            <th>Tích điểm</th>
                                             
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        @foreach ($feedbacks as $item)
+                                        @foreach ($users as $item)
                                         <tr>
                                             
-                                            <td>{{$item->name}}</td>
+                                            <td>{{$item->hovaten}}</td>
+                                            <td>{{$item->diachi}}</td>
+                                            <td>{{$item->sodienthoai}}</td>
                                             <td>{{$item->email}}</td>
-                                            <td>{{$item->message}}</td>
-                                            <td>{{$item->trangthai}}</td>
-                                            <td><a href="{{route('feedback.edit',['id' => $item->id])}}" class="btn btn-success">Trả lời</a></td>
-                                            
+                                            <td>{{$item->tichdiem}}</td>
+                                           
+                                           
+                                           
                                         </tr>
                                         @endforeach
                                     

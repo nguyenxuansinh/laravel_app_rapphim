@@ -134,6 +134,7 @@ Route::group(['middleware' => 'checklogin_admin'], function () {
    Route::post('feedback/update/{id}', [FeedbackController::class, 'update'])->name('feedback.update');
    Route::get('feedback/delete_all', [FeedbackController::class, 'delete_all'])->name('feedback.delete_all');
   
+   Route::get('thongtinkhachhang/index', [AdminController::class, 'thongtinkhachhang_index'])->name('thongtinkhachhang.index');
    Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
 });

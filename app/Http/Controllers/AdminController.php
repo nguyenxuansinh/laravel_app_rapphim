@@ -7,6 +7,7 @@ use App\Models\Chongoi;
 use App\Models\Hoadon;
 use App\Models\phim;
 use App\Models\phongchieu;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -67,6 +68,12 @@ class AdminController extends Controller
                 ->get();
         return view("home_admin.index",['hoadons'=>$hoadons,'doanhThuTheoThang'=>$doanhThuTheoThang,'tongDoanhThu' => $tongDoanhThu,'results'=>$results,'doanhThuTheoNam'=>$doanhthutheonam]);
     }
+    public function thongtinkhachhang_index()
+    {
+        $users = User::where('phanquyen', 0)->get();
+        return view("home_admin.thongtinkhachhang",['users'=>$users]);
+    }
+   
     public function doanh_thu(Request $request)
     {
         $startDate = $request->start_date;
