@@ -97,6 +97,9 @@
                                   <label class="form-label">Tên phim</label>
                                   <input type="text" class="form-control" name="tenphim" placeholder="Nhập tên phim"  value="{{ $phims->tenphim }}" required>
                                 </div>
+                                @if ($errors->has('tenphim'))
+                                    <span class="text-danger">{{ $errors->first('tenphim') }}</span>
+                                @endif
                                 <div class="mb-3">
                                     <label  class="form-label">Thể loại</label>
                                     <input type="text" class="form-control" name="theloai" placeholder="Nhập thể loại" value="{{ $phims->theloai }}" required>

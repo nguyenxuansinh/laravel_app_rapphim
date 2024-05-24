@@ -19,7 +19,11 @@ class PhimController extends Controller
 
     public function insert_phim(Request $request){
         $request->validate([
-            'video' => 'required|mimes:mp4,ogx,oga,ogv,ogg,webm'
+            'mota'=>'required',
+            'anhphim'=>'required',
+            'video' => 'required|mimes:mp4,ogx,oga,ogv,ogg,webm',
+            
+
         ]);
 
 
@@ -32,7 +36,13 @@ class PhimController extends Controller
         $insert->ngayphathanh = $request->input('ngayphathanh');
         $insert->thoiluong = $request->input('thoiluong');
         $insert->mota = $request->input('mota');
-        
+
+        $exists = Phim::where('tenphim', $insert->tenphim)->exists();
+
+        if ($exists) {
+            // Movie name already exists, handle the error
+            return redirect()->back()->withErrors(['tenphim' => 'Tên phim đã tồn tại.']);
+        }
         
         $insert->trangthai = $request->input('trangthaiphim');
 
@@ -115,6 +125,15 @@ class PhimController extends Controller
                 'hinhanh' => $generatedImageName
             ]);
             
+        }
+        $tenphimmoi = $request->input('tenphim');
+        if($tenphimmoi !== $phims->tenphim){
+            $exists = Phim::where('tenphim', $tenphimmoi)->exists();
+
+            if ($exists) {
+                // Movie name already exists, handle the error
+                return redirect()->back()->withErrors(['tenphim' => 'Tên phim mới đã tồn tại.']);
+            }
         }
 
         $phims->update([

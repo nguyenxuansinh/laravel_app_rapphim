@@ -20,6 +20,12 @@ class PhongchieuController extends Controller
     {
         $insert = new phongchieu();
         $insert->tenphong = $request->input('tenphong');
+        $exists = phongchieu::where('tenphong', $insert->tenphong)->exists();
+
+        if ($exists) {
+            
+            return redirect()->back()->withErrors(['tenphong' => 'Tên phòng chiếu đã tồn tại.']);
+        }
         $insert->save();
         return redirect()->route('phongchieu.index');
     }
@@ -32,7 +38,15 @@ class PhongchieuController extends Controller
     public function update(Request $request, string $id)
     {
         $phongchieus = phongchieu::find($id);
+        $tenphongmoi = $request->input('tenphong');
+        if($tenphongmoi !== $phongchieus->tenphong){
+            $exists = phongchieu::where('tenphong', $tenphongmoi)->exists();
 
+            if ($exists) {
+                // Movie name already exists, handle the error
+                return redirect()->back()->withErrors(['tenphong' => 'Tên phòng chiếu mới đã tồn tại.']);
+            }
+        }
 
         $phongchieus->update([
             'tenphong' => $request->input('tenphong'),

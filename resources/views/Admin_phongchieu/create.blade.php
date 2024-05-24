@@ -96,6 +96,9 @@
                                 <div class="mb-3">
                                   <label class="form-label">Tên phòng</label>
                                   <input type="text" class="form-control" name="tenphong" placeholder="Nhập tên phòng" required>
+                                  @if ($errors->has('tenphong'))
+                                  <span class="text-danger">{{ $errors->first('tenphong') }}</span>
+                                 @endif
                                 </div>
                                 
                         

@@ -596,6 +596,7 @@
   @include('Home_user.layouts.footer')
   @if(isset($mo) && $mo === 0)
       <script>
+        console.log("iseet : mở");
         document.querySelector('.modal_het_time1').style.display = "block";
       </script>
   @endif
@@ -969,9 +970,13 @@ $('.ajax-form').on('click', function(e){
                                                                     var message =  minutes + ' : ' + seconds ;
                                                                     document.getElementById('sessionLifetime').innerHTML = message;
                                                                     if(minutes === '00' && seconds=='00'){
-                                                                
+                                                                        console.log("00 : mở");
                                                                         document.querySelector('.modal_het_time').style.display = "block";
+                                                                       
                                                                         
+                                                                        
+                                                                       
+                                                                       
                                                                     }
                                                                     
                                                                 }, 1000);
@@ -989,7 +994,7 @@ $('.ajax-form').on('click', function(e){
                                                     }
 
                                                     if(response.mo==0){
-                                                        
+                                                        document.querySelector('.modal_het_time1').style.display = "block";
                                                     }
                                                     
                                                 

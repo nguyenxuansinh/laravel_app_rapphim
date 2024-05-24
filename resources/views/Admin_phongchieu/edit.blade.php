@@ -96,8 +96,11 @@
                                 <div class="mb-3">
                                   <label class="form-label">Tên phòng</label>
                                   <input type="text" class="form-control" name="tenphong" placeholder="Nhập tên phòng"  value="{{ $phongchieus->tenphong }}" required>
+                                  @if ($errors->has('tenphong'))
+                                  <span class="text-danger">{{ $errors->first('tenphong') }}</span>
+                                @endif
                                 </div>
-                               
+                                
                         
                                 <button type="submit" class="btn btn-primary">Cập nhật phòng</button>
                               </form>

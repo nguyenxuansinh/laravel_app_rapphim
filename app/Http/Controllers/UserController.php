@@ -79,7 +79,7 @@ class UserController extends Controller
                 
             }
         } else {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Tài khoản hoặc mật khẩu sai.');
            
         }
     }
@@ -590,10 +590,41 @@ class UserController extends Controller
             $chongoi = Chongoi::where('id_suatchieu',$idsuatchieu)
             ->where('id_ghe',$maghe)
             ->get();
-            if (!$chongoi->isEmpty()) {
-                return response()->json(['mo' => 0]);
-            } 
+            $luutam = Luutam::where('id_suatchieu', $idsuatchieu)->where('id_ghe', $maghe)->get();
+               
 
+           
+            // Nếu có ghế được đặt, trả về một phản hồi JSON
+            if (!$chongoi->isEmpty() || !$luutam->isEmpty()) {
+                return response()->json(['mo' => 0]);
+            }
+            /*if (!$chongoi->isEmpty()) {
+                return response()->json(['mo' => 0]);
+            } */
+            /*$chongoi = Chongoi::where('id_suatchieu', $idsuatchieu)
+                                   ->whereIn('id_ghe', $maghe)
+                                   ->get();
+                $luutam = Luutam::whereIn('id_ghe', $maghe)->where('id_suatchieu', $idsuatchieu)->get();
+               
+
+                if ($luutam->isEmpty()) {
+                    // Nếu cặp giá trị chưa tồn tại, tạo mới
+                    if(count($ds_ghe)>0){
+                        foreach ($ds_ghe as $row) {
+                            $newLuutam = new Luutam();
+                            $newLuutam->id_ghe = $row['id'];
+                            $newLuutam->id_suatchieu = $idsuatchieu;
+                            $newLuutam->trangthai = "Lưu Tạm";
+                            $newLuutam->save();
+                        }
+                    }
+                    
+                }
+                // Nếu có ghế được đặt, trả về một phản hồi JSON
+                if (!$chongoi->isEmpty() || !$luutam->isEmpty()) {
+                    return response()->json(['mo' => 0]);
+                }
+                */
             $found = false;
             foreach ($ds_ghe as $gh) {
                 if ($gh['id'] == $maghe  ) {
@@ -630,6 +661,7 @@ class UserController extends Controller
                 }else if(count($ds_ghe)>=$soluongve && $soluongve == 0){
                     return response()->json(['message' => 'Bạn cần mua vé!']);
                 }
+                
             } else if(!$found && (count($ds_ghe)<session($so_luong_))) {
                 // Nếu chưa tồn tại, thêm ghế vào danh sách
                 $ds_ghe[] = ['id' => $ghes->id, 'tenghe' => $ghes->tenghe];
@@ -809,7 +841,9 @@ class UserController extends Controller
             
             $ds_ghe_ = 'ds_ghe_' . Auth::user()->id;
             foreach (session($ds_ghe_) as $row){
-                
+                Luutam::where('id_ghe', $row['id'])
+                                ->where('id_suatchieu', $id_suatchieu)
+                                ->delete();
                 $insert_chongoi = new chongoi();
                $insert_chongoi->id_ghe =$row['id'];
                 $insert_chongoi->trangthai ="Đã đặt";
@@ -985,7 +1019,7 @@ class UserController extends Controller
                 $luutam = Luutam::whereIn('id_ghe', $ids_ghe)->where('id_suatchieu', $idsuatchieu)->get();
                
 
-                if ($luutam->isEmpty()) {
+               if ($luutam->isEmpty()) {
                     // Nếu cặp giá trị chưa tồn tại, tạo mới
                     foreach ($ds_ghe as $row) {
                         $newLuutam = new Luutam();
@@ -1075,8 +1109,26 @@ class UserController extends Controller
         
           
         }
-        
+       
+        public function xoaluutam()
+        {
+            $chongio_ = 'chongio_' . Auth::user()->id;
 
+            $id_suatchieu = null;
+            foreach (session($chongio_) as $row) {
+                $id_suatchieu = $row['id'];
+            }
+
+            if ($id_suatchieu !== null) {
+                $ds_ghe_ = 'ds_ghe_' . Auth::user()->id;
+                foreach (session($ds_ghe_) as $row) {
+                    Luutam::where('id_ghe', $row['id'])
+                        ->where('id_suatchieu', $id_suatchieu)
+                        ->delete();
+                }
+            }
+            return response()->json(['status' => 'success', 'message' => 'Data deleted successfully']);
+        }
         
        
         public function search(Request $request)

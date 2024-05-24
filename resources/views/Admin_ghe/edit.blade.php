@@ -97,6 +97,9 @@
                                     <label class="form-label">Tên ghế</label>
                                     <input type="text" class="form-control" name="tenghe" value="{{ $ghes->tenghe }}" placeholder="Nhập tên ghế" required>
                                   </div>
+                                  @if ($errors->has('tenghe'))
+                                    <span class="text-danger">{{ $errors->first('tenghe') }}</span>
+                                @endif
                                   <div class="mb-3">
                                       <label class="form-label">Trạng thái</label>
                                       <input type="text" class="form-control" name="trangthai" value="{{ $ghes->trangthai}}" placeholder="Nhập trạng thái ghế" required>

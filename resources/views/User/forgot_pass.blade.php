@@ -44,7 +44,7 @@
                                     </div>
                                     <div class ="text-white">Chúng tôi sẽ gửi xác nhận đến email của bạn</div>
                                     <div style="margin-bottom: 20px" class = "text-white">Vào Email để đổi mật khẩu mới.</div>
-                                    <form class="user" method="POST" action="{{route('user.for_got')}}">
+                                    <form class="user" method="POST" action="{{route('user.for_got_check')}}">
                                         @csrf
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"

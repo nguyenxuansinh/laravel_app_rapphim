@@ -20,6 +20,11 @@ class GheController extends Controller
         $insert->tenghe = $request->input('tenghe');
         $insert->trangthai = $request->input('trangthai');
         $insert->id_phongchieu = $request->input('ghe_phongchieu');
+        $exists = ghe::where('id_phongchieu', $insert->id_phongchieu)->where('tenghe', $insert->tenghe)->exists();
+        if ($exists) {
+            
+            return redirect()->back()->withErrors(['tenghe' => 'Tên ghế trong cùng một phòng đã tồn tại.']);
+        }
         $insert->save();
         return redirect()->route('ghe.index');
     }
@@ -35,6 +40,15 @@ class GheController extends Controller
     {
         $ghes = ghe::find($id);
 
+        $tenghegmoi = $request->input('tenghe');
+        $tenphongmoi = $request->input('ghe_phongchieu');
+        if($tenghegmoi !== $ghes->tenghe && $tenphongmoi !== $ghes->id_phongchieu){
+            $exists = ghe::where('id_phongchieu', $tenphongmoi)->where('tenghe', $tenghegmoi)->exists();
+            if ($exists) {
+                
+                return redirect()->back()->withErrors(['tenghe' => 'Tên ghế trong cùng một phòng đã tồn tại.']);
+            }
+        }
 
         $ghes->update([
             'tenghe' => $request->input('tenghe'),

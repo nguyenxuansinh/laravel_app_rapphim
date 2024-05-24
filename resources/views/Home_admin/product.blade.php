@@ -143,7 +143,7 @@
                                             <td><img height="75" width="80" src="{{asset('image_phims/'.$item->hinhanh)}}"></td>
                                             
                                             <td>{{$item->trangthai}}</td>
-                                            <td><a href="{{route('phim.detail',['id' => $item->id])}}" class="btn btn-success">detail</a></td>
+                                            <td><a href="{{route('phim.detail',['id' => $item->id])}}" class="btn btn-primary">detail</a></td>
                                             <td><a href="{{route('phim.edit',['id' => $item->id])}}" class="btn btn-success">edit</a></td>
                                             <td>
                                                 <form action="{{route('phim.delete',['id' => $item->id])}}" method="POST">

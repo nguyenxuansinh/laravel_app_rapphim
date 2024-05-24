@@ -56,6 +56,10 @@ class SuatchieuController extends Controller
             ->orWhere(function ($q) use ($thoiGianChieuMoi, $thoiGianKetThucMoi) {
                 $q->where('thoigianchieu', '<', $thoiGianChieuMoi)
                     ->where('thoigianketthuc', '>', $thoiGianKetThucMoi);
+            })
+            ->orWhere(function ($q) use ($thoiGianChieuMoi, $thoiGianKetThucMoi) {
+                $q->where('thoigianchieu', '>', $thoiGianChieuMoi)
+                    ->where('thoigianketthuc', '<', $thoiGianKetThucMoi);
             });
         })
         ->exists();
@@ -89,7 +93,53 @@ class SuatchieuController extends Controller
     {
         $suatchieus = suatchieu::find($id);
 
-        $existingSuatChieu = SuatChieu::where('id_phongchieu', $request->input('suat_phongchieu'))
+        $thoiGianChieuMoi = $request->input('thoigianchieu');
+        $thoiGianKetThucMoi = $request->input('thoigianketthuc');
+        $phongChieu = $request->input('suat_phongchieu');
+        $thoiGianChieuMoi = Carbon::parse($thoiGianChieuMoi);
+        $thoiGianKetThucMoi = Carbon::parse($thoiGianKetThucMoi);
+    
+        // kiểmtra thoi gian chieu 
+        if ($thoiGianKetThucMoi->lessThan($thoiGianChieuMoi)) {
+            return redirect()->back()->withInput()->with('error', 'Thời gian chiếu hoặc kết thúc sai.');
+        }
+    
+    
+        // Kiểm tra xem đã tồn tại suất chiếu trong cùng một phòng, cùng một ngày không
+        $existingSuatChieu = SuatChieu::where('id_phongchieu', $phongChieu)
+            ->whereDate('thoigianchieu', $thoiGianChieuMoi->toDateString())
+            ->exists();
+        
+        if ($existingSuatChieu) {
+            // Nếu đã tồn tại suất chiếu, kiểm tra thời gian chiếu và kết thúc có giao nhau không
+            $giaoNhau = SuatChieu::where('id_phongchieu', $phongChieu)
+            ->whereDate('thoigianchieu', $thoiGianChieuMoi->toDateString())
+            ->where(function ($query) use ($thoiGianChieuMoi, $thoiGianKetThucMoi) {
+                $query->where(function ($q) use ($thoiGianChieuMoi, $thoiGianKetThucMoi) {
+                    $q->where('thoigianchieu', '>=', $thoiGianChieuMoi)
+                        ->where('thoigianchieu', '<', $thoiGianKetThucMoi);
+                })
+                ->orWhere(function ($q) use ($thoiGianChieuMoi, $thoiGianKetThucMoi) {
+                    $q->where('thoigianketthuc', '>', $thoiGianChieuMoi)
+                        ->where('thoigianketthuc', '<=', $thoiGianKetThucMoi);
+                })
+                ->orWhere(function ($q) use ($thoiGianChieuMoi, $thoiGianKetThucMoi) {
+                    $q->where('thoigianchieu', '<', $thoiGianChieuMoi)
+                        ->where('thoigianketthuc', '>', $thoiGianKetThucMoi);
+                })
+                ->orWhere(function ($q) use ($thoiGianChieuMoi, $thoiGianKetThucMoi) {
+                    $q->where('thoigianchieu', '>', $thoiGianChieuMoi)
+                        ->where('thoigianketthuc', '<', $thoiGianKetThucMoi);
+                });
+            })
+            ->exists();
+    
+            if ($giaoNhau) {
+                return redirect()->back()->withInput()->with('error', 'Thời gian chiếu và kết thúc giao nhau hoặc trùng với thời gian chiếu khác cùng một phòng chiếu này!');
+            }
+        }
+
+        /*$existingSuatChieu = SuatChieu::where('id_phongchieu', $request->input('suat_phongchieu'))
                                    ->where('thoigianchieu', $request->input('thoigianchieu'))
                                    ->where('id_phim', $request->input('suat_phim'))
                                    ->where('giave', $request->input('giave'))
@@ -98,13 +148,14 @@ class SuatchieuController extends Controller
             return redirect()->back()->withInput()->with('error', 'Suất chiếu đã tồn tại.');
     
         }
-
+*/
        
 
-        
+       
         $suatchieus->update([
             'id_phongchieu' => $request->input('suat_phongchieu'),
             'thoigianchieu' => $request->input('thoigianchieu'),
+            
             'id_phim' => $request->input('suat_phim'),
             'thoigianketthuc' => $request->input('thoigianketthuc'),
             'giave'=>$request->input('giave'),

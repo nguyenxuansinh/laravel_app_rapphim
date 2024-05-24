@@ -144,7 +144,24 @@
                                     if(minutes === '00' && seconds=='00'){
                                    
                                         document.querySelector('.modal_het_time').style.display = "block";
-                                        
+                                        if (!window.ajaxCalled) {
+                                          window.ajaxCalled = true;
+                                          $.ajax({
+                                                url: "{{ route('xoaluutam') }}",
+                                                type: 'POST',
+                                                data: {
+                                                _token: "{{ csrf_token() }}",
+                                                },
+                                                success: function(response) {
+                                                    console.log('Success:', response);
+                                                                                  
+                                                },
+                                                error: function(xhr) {
+                                                console.error('Error:', xhr.responseText);
+                                                                                  // Xử lý lỗi nếu có
+                                                  }
+                                                });
+                                          }
                                     }
                                     
                                 }, 1000);

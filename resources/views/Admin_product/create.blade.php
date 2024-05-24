@@ -97,6 +97,9 @@
                                   <label class="form-label">Tên phim</label>
                                   <input type="text" class="form-control" name="tenphim" placeholder="Nhập tên phim" required>
                                 </div>
+                                @if ($errors->has('tenphim'))
+                                    <span class="text-danger">{{ $errors->first('tenphim') }}</span>
+                                @endif
                                 <div class="mb-3">
                                     <label  class="form-label">Thể loại</label>
                                     <input type="text" class="form-control" name="theloai" placeholder="Nhập thể loại" required>
@@ -121,21 +124,29 @@
                                   <label class="form-label">Mô tả</label>
                                   <textarea class="form-control" name="mota" rows="3" placeholder="Nhập mô tả sản phẩm"></textarea>
                                 </div>
-                                
+                                <p style="color: red;">
+                                    @if($errors->has('mota'))
+                                        {{ $errors->first('mota') }}
+                                    @endif
+                                </p>
                                 <div class="mb-3">
                                   <label  class="form-label">Ảnh phim</label>
                                   <input type="file" class="form-control" name="anhphim" accept="image/*">
                                 </div>
-                                <p>
-                                    @if($errors->has('video'))
-                                        {{ $errors->first('video') }}
+                                <p style="color: red;">
+                                    @if($errors->has('anhphim'))
+                                        {{ $errors->first('anhphim') }}
                                     @endif
                                 </p>
                                 <div class="mb-3">
                                     <label  class="form-label">video trailer phim</label>
                                     <input type="file" class="form-control" name="video" accept="video/*">
                                   </div>
-                            
+                                  <p style="color: red;">
+                                    @if($errors->has('video'))
+                                        {{ $errors->first('video') }}
+                                    @endif
+                                </p>
                                 <div class="mb-3">
                                     <label  class="form-label">Trạng thái phim</label>
                                     <input type="text" class="form-control" name="trangthaiphim" placeholder="Nhập trạng thái phim" required>

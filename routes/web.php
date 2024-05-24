@@ -32,7 +32,7 @@ Route::get('/register', [UserController::class, 'register'])->name('user.registe
 Route::post('/user/create', [UserController::class,'store'])->name('user.create');
 
 Route::get('/for_got', [UserController::class, 'for_got'])->name('user.for_got');
-Route::post('/for_got_check', [UserController::class, 'for_got_check'])->name('user.for_got');
+Route::post('/for_got_check', [UserController::class, 'for_got_check'])->name('user.for_got_check');
 Route::get('change-account/{email}', [UserController::class, 'change_pass'])->name('user.change');
 Route::post('/doimatkhau', [UserController::class, 'doimatkhau'])->name('user.doimatkhau');
 
@@ -44,12 +44,12 @@ Route::post('/doimatkhau', [UserController::class, 'doimatkhau'])->name('user.do
 Route::get('/', [UserController::class, 'index'])->name('user.index');
 Route::get('user/gioithieu', [UserController::class, 'user_gioithieu_view'])->name('user.gioithieu');
 Route::get('user/search', [UserController::class, 'search'])->name('user.search');
-
+Route::post('user/feedback', [FeedbackController::class,'feedback'])->name('user.feedback');
 Route::group(['middleware' => 'checklogin'], function () {
    Route::get('/nangcaphang', [UserController::class, 'nangcaphang'])->name('nangcaphang');
    Route::post('user/update_pass', [UserController::class,'update'])->name('user.update_pass');
    Route::post('user/update_info', [UserController::class,'update_info'])->name('user.update_info');
-   Route::post('user/feedback', [FeedbackController::class,'feedback'])->name('user.feedback');
+   
 
    Route::get('/thanhtoan', [UserController::class, 'thanhtoan'])->name('thanhtoan');
    Route::get('/thongtindadat', [UserController::class, 'thongtindadat'])->name('thongtindadat');
@@ -79,7 +79,7 @@ Route::group(['middleware' => 'checklogin'], function () {
    Route::post('user/datghe', [UserController::class, 'datghe_maghe'])->name('datghe.maghe');
    Route::post('/vnpay_payment', [UserController::class, 'vnpay_payment'])->name('vnpay_payment');
    Route::post('/momo_payment', [UserController::class, 'momo_payment'])->name('momo_payment');
-
+   Route::post('/xoaluutam', [UserController::class, 'xoaluutam'])->name('xoaluutam');
    Route::get('/user/logout', [UserController::class, 'logout'])->name('user.logout');
 });
 
