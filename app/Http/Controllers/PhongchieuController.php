@@ -13,6 +13,7 @@ class PhongchieuController extends Controller
     public function index()
     {
         $phongchieus = phongchieu::all();
+        
         return view('home_admin.phongchieu')->with('phongchieus',$phongchieus);
     }
 

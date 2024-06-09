@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\banner;
 use App\Models\Chongoi;
+use App\Models\ghe;
 use App\Models\Hoadon;
 use App\Models\phim;
 use App\Models\phongchieu;
@@ -115,8 +116,28 @@ class AdminController extends Controller
     public function hoadon_detail($id)
     {
         $hoadons = Hoadon::where('id',$id)->get();
-        $chongoi = Chongoi::where('id_thanhtoan', $id)->with(['ghevatly', 'suatchieu'])->get();
-       
+        /*$chongoi = Chongoi::where('id_thanhtoan', $id)->with(['ghevatly', 'suatchieu'])->get();*/
+        $chongoi = ChonGoi::where('id_thanhtoan', $id)
+        ->with('suatchieu')
+        ->get();
+        $ghes = [];
+
+        // Lặp qua từng chọn ghế để lấy thông tin ghế tương ứng
+        foreach ($chongoi as $chon) {
+            $gheId = $chon->id_ghe;
+            // Lấy thông tin ghế từ id_ghe
+            $ghe = ghe::find($gheId);
+            // Nếu không tìm thấy thông tin ghế, gán tên ghế là null
+            $tenGhe = $ghe ? $ghe->tenghe : null;
+    
+            // Thêm thông tin ghế vào mảng
+            $ghes[] = [
+                'ten_ghe' => $tenGhe,
+                // Các thông tin khác của chọn ghế
+                'trangthai' => $chon->trangthai,
+                // Và các thông tin khác bạn muốn bao gồm
+            ];
+        }
         $firstChongoi = $chongoi->first();
         $phimId = $firstChongoi->suatchieu->id_phim;
         $phim = Phim::find($phimId);
@@ -124,8 +145,8 @@ class AdminController extends Controller
         $ngaychieu = $firstChongoi->suatchieu->thoigianchieu;
         $phongchieuId = $firstChongoi->suatchieu->id_phongchieu;
         $phongchieu = Phongchieu::find($phongchieuId);
-
-        return view("home_admin.hoadon_detail",['chongoi' => $chongoi,'hoadon'=>$hoadons,'phim'=>$phim,'ngaychieu'=>$ngaychieu,'phongchieu'=>$phongchieu]);
+     
+        return view("home_admin.hoadon_detail",['ghes' => $ghes,'chongoi' => $chongoi,'hoadon'=>$hoadons,'phim'=>$phim,'ngaychieu'=>$ngaychieu,'phongchieu'=>$phongchieu]);
     }
 
     

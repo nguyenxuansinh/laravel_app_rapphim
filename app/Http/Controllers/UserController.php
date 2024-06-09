@@ -75,12 +75,12 @@ class UserController extends Controller
                 $user = User::where('email', $request->email)->first();
                 $tieude = "Hi : " . $user->hovaten;
                 Mail::to($user->email)->send(new verify($tieude, $user));
-                abort(403, 'Tài khoản chưa active. Hãy vào email để active');
-                
+                //abort(403, 'Tài khoản chưa active. Hãy vào email để active');
+                return redirect()->back()->withErrors(['email' => 'Tài khoản chưa active. Hãy vào email để active.']);
             }
         } else {
-            abort(403, 'Tài khoản hoặc mật khẩu sai.');
-           
+            //abort(403, 'Tài khoản hoặc mật khẩu sai.');
+            return redirect()->back()->withErrors(['email' => 'Tài khoản hoặc mật khẩu sai.']);
         }
     }
     public function logout( )
@@ -1016,6 +1016,7 @@ class UserController extends Controller
                 $chongoi = Chongoi::where('id_suatchieu', $idsuatchieu)
                                    ->whereIn('id_ghe', $ids_ghe)
                                    ->get();
+                                   
                 $luutam = Luutam::whereIn('id_ghe', $ids_ghe)->where('id_suatchieu', $idsuatchieu)->get();
                
 
@@ -1104,7 +1105,7 @@ class UserController extends Controller
         Mail::to($emails)->send(new thongtindatve_email($tieudes,$guimahoadon,$tenphim,$diachi,$thoigian,$soluong,$ds_ghe_sorted));
         
             
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Email đã được gửi thành công!');
   
         
           

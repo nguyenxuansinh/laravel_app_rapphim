@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Login</title>
+    <title>StarCinema</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{asset('assets')}}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -54,7 +54,32 @@
                                                 id="exampleInputPassword" placeholder="Password"
                                                 name="password" required>
                                         </div>
+                                        <div id="notification" style="display: none;">
+                                           
+                                            @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                               
+                                                    @foreach ($errors->all() as $error)
+                                                        {{ $error }}
+                                                    @endforeach
+                                                
+                                            </div>
+                                        @endif
+                                        </div>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function () {
+                                                var notification = document.getElementById('notification');
+                                                notification.style.display = 'block'; // Hiển thị thông báo
                                         
+                                                // Chờ 3 giây trước khi xóa nội dung
+                                                setTimeout(function () {
+                                                    // Xóa nội dung của phần tử thông báo
+                                                    notification.innerHTML = '';
+                                                    // Sau khi xóa nội dung, ẩn phần tử thông báo đi
+                                                    notification.style.display = 'none';
+                                                }, 3000); // 3 giây
+                                            });
+                                        </script>
                                         <button style="background-color: #f3ea28; color: black; font-weight: bold; font-size: 16px;" type="submit" class="btn  btn-user btn-block">
                                             Login
                                         </button>

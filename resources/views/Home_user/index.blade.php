@@ -120,6 +120,8 @@
    
 
    .bg-register-image{
+      width: 30rem;
+      height: 30rem;
       background: url('{{asset('assets1')}}/img/lienhe-removebg.png');
       background-position: center;
       background-size: cover;
@@ -481,10 +483,10 @@ form.user .btn-user {
       @if(count($phimsapchieu)>0)
       <div style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
         <h2 style="font-weight: bold; color: white;" class="animate__animated animate__fadeInDown">PHIM SẮP CHIẾU</h2>
-    </div>
+      </div>
     
 
-      <div id="carouselExampleControlsscdestop" class="carousel slide destop" data-bs-ride="carousel">
+      <div id="carouselExampleControlsscdestop" class="carousel slide  destop" data-bs-ride="carousel">
         <div  class="carousel-inner" role="listbox">
           @for ($i = 0; $i < count($phimsapchieu); $i += 4)
           <div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
@@ -533,9 +535,10 @@ form.user .btn-user {
               
               </div>
             @endfor
-          </div>
-          @endfor
+            </div>
         </div>
+          @endfor
+       
          
         </div>
         <button style="width: 10%;" class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsscdestop" data-bs-slide="prev">
@@ -600,8 +603,9 @@ form.user .btn-user {
               </div>
             @endfor
           </div>
-          @endfor
         </div>
+          @endfor
+        
          
         </div>
         <button style="width: 10%;" class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlssctabled" data-bs-slide="prev">
@@ -616,7 +620,7 @@ form.user .btn-user {
           <a href="{{ route('phimsapchieu.detail') }}" class="hover-button">XEM THÊM</a>
         </div>
       </div>
-      <div id="carouselExampleControlsscmobile" class="carousel slide mobile" data-bs-ride="carousel">
+      <div id="carouselExampleControlsscmobile" class="carousel slide mobile" data-bs-ride="carousel" data-interval="false">
         <div  class="carousel-inner" role="listbox">
           @for ($i = 0; $i < count($phimsapchieu); $i += 2)
           <div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
@@ -666,8 +670,9 @@ form.user .btn-user {
               </div>
             @endfor
           </div>
-          @endfor
         </div>
+          @endfor
+        
          
         </div>
         <button style="width: 10%;" class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsscmobile" data-bs-slide="prev">
@@ -693,7 +698,7 @@ form.user .btn-user {
 
     
         <div class="card-body p-0">
-            <div class="row">
+            <div class="row" style="display: flex; align-items: center; justify-content: center">
                 <div  class="col-lg-6 d-none d-lg-block bg-register-image lazyload"></div>
                 <div class="col-lg-6">
                     <div class="p-5">

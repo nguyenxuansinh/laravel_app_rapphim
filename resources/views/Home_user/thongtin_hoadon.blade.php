@@ -54,14 +54,14 @@
     $ds_ghe_ = 'ds_ghe_' . Auth::user()->id;
   ?>
   <!-- ======= Hero Section ======= -->
-  <div id="" style="margin-top: 130px; margin-bottom: 40px;" class="container">
+  <div id="" style="margin-top: 60px; margin-bottom: 40px;" class="container">
     <div style="display: flex;align-items: center;justify-content: center;">
        
         <div class="col-6" style="background-color: #3366CC; border-radius: 10px;padding: 20px;">
             <div>
                
                  <div style="display: flex; justify-content: space-between">
-                    <div class="col"> <img src="{{ asset('image_phims/'.session($phim_)->hinhanh) }}" class="d-block mx-auto lazyload"  style="max-width: 100%; height: 100%;" alt="..."></div>
+                    <div style="height: 20rem" class="col"> <img src="{{ asset('image_phims/'.session($phim_)->hinhanh) }}" class="d-block mx-auto lazyload"  style="max-width: 100%; height: 100%;" alt="..."></div>
                     <canvas id="qrcode"class="col" style=""></canvas>
 
                     <script>
@@ -137,6 +137,36 @@
 
                
             </div>
+            <div id="notification" style="display: none;">
+              @if (session('success'))
+                  <div class="alert alert-success">
+                      {{ session('success') }}
+                  </div>
+              @endif
+              @if ($errors->any())
+              <div class="alert alert-danger">
+                 
+                      @foreach ($errors->all() as $error)
+                          {{ $error }}
+                      @endforeach
+                  
+              </div>
+          @endif
+          </div>
+          <script>
+              document.addEventListener('DOMContentLoaded', function () {
+                  var notification = document.getElementById('notification');
+                  notification.style.display = 'block'; // Hiển thị thông báo
+          
+                  // Chờ 3 giây trước khi xóa nội dung
+                  setTimeout(function () {
+                      // Xóa nội dung của phần tử thông báo
+                      notification.innerHTML = '';
+                      // Sau khi xóa nội dung, ẩn phần tử thông báo đi
+                      notification.style.display = 'none';
+                  }, 3000); // 3 giây
+              });
+          </script>
 
             <form class=""  method="POST" action="{{ route('guithongtindat_ve_email') }}">
               @csrf

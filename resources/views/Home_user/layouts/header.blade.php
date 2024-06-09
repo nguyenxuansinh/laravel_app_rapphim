@@ -41,11 +41,14 @@
   } 
   @media (min-width: 1025px) {
     .container1 {
-        max-width: 1000px;
+        max-width: 1025px;
     }
   }
   
   @media (min-width : 740px) and (max-width : 1023px){
+    .container1{
+    padding-left: 20px;
+  }
     .navbar a:hover, .navbar .active, .navbar .active:focus, .navbar li:hover>a {
     color: black;
   }
@@ -75,6 +78,9 @@
 
   
 @media (max-width : 739px){
+  .container1{
+    padding-left: 20px;
+  }
   .navbar a:hover, .navbar .active, .navbar .active:focus, .navbar li:hover>a {
     color: black;
   }
@@ -95,6 +101,12 @@
     color: white;
     padding: 10px 20px;
   }
+  .timkiemmobi{
+    max-width: 150px;
+  }
+  .timkiemmobi input{
+    width: 88px !important;
+  }
 }
 
   
@@ -108,10 +120,10 @@
     <h1 class="logo me-auto"><a style="color: white;" href="{{ route('user.index') }}">StarCinema</a></h1>
     <!-- Uncomment below if you prefer to use an image logo -->
     <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-    <div style="display: flex; align-items: center; background-color: white;padding: 5px 10px;border-radius: 20px;position: relative;z-index: 2;">
+    <div class = "timkiemmobi" style="display: flex; align-items: center; background-color: white;padding: 5px 10px;border-radius: 20px;position: relative;z-index: 2;">
      
       <form id="search-form" action="{{ route('user.search') }}" method="GET" style="background: transparent;">
-        <marquee  id="myMarquee" behavior="scroll" direction="left" style="position: absolute; top: 50%; transform: translateY(-50%); z-index: -1;">Nhập tên phim hoặc tên đạo diễn</marquee>
+        <marquee  id="myMarquee" behavior="scroll" direction="left" style="position: absolute; top: 50%; transform: translateY(-50%); z-index: -1;">Tên phim, đạo diễn, diễn viên</marquee>
         <input  name="search" id="search-input" style="width: initial;outline: none; border: none; z-index: 5;background: transparent " oninput="checkInput()" type="text" >
         <i class="fas fa-search"></i>
       </form>
@@ -120,17 +132,17 @@
     
     <nav id="navbar" class="navbar">
       <ul>
-        <li><a href="{{ route('user.index') }}" class=" active ">Home</a></li>
+        <li><a href="{{ route('user.index') }}" class=" active ">TRANG CHỦ</a></li>
 
        
-        <li><a  href="{{ route('user.gioithieu') }}">Giới thiệu</a></li>
+        <li><a  href="{{ route('user.gioithieu') }}">GIỚI THIỆU</a></li>
         
        
         @if (Auth::check())
         <li  class="dropdown"> <a href="#"><span  >{{ Auth::user()->hovaten }}</span> <i class="bi bi-chevron-down"></i></a>
           <ul class="thongtincanhan">
-            <li><a href="{{ route('user.info_view') }}">Thông tin cá nhân</a></li>
-            <li><a href="{{ route('user.logout') }}">Đăng xuất</a></li>
+            <li><a href="{{ route('user.info_view') }}">THÔNG TIN CÁ NHÂN</a></li>
+            <li><a href="{{ route('user.logout') }}">ĐĂNG XUẤT</a></li>
           </ul>
         </li>
        @else
